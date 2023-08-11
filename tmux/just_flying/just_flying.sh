@@ -27,7 +27,7 @@ SESSION_NAME=mav
 
 # following commands will be executed first in each window
 # * do NOT put ; at the end
-pre_input="mkdir -p $MAIN_DIR/$PROJECT_NAME"
+pre_input="export UAV_NAME=uav1; export RUN_TYPE=realworld; export WORLD_NAME=cisar; export UAV_MASS=2.0; export UAV_TYPE=x500; export SENSORS=''"
 
 # define commands
 # 'name' 'command'
@@ -43,17 +43,18 @@ input=(
 '
   'Status' 'waitForHw; roslaunch mrs_uav_status status.launch
 '
-  'Control' 'waitForTime; roslaunch mrs_uav_core platform_config:=`rospack find mrs_uav_deployment`/config/mrs_uav_system/$UAV_TYPE.yaml core.launch custom_config:=./custom_configs/custom_config.yaml
+  'Control' 'waitForTime; roslaunch mrs_uav_core core.launch platform_config:=`rospack find mrs_uav_deployment`/config/mrs_uav_system/$UAV_TYPE.yaml custom_config:=./custom_configs/custom_config.yaml
 '
   'AutoStart' 'waitForHw; roslaunch mrs_uav_autostart automatic_start.launch
 '
+# do NOT modify the command list below
   'EstimDiag' 'waitForHw; rostopic echo /'"$UAV_NAME"'/estimation_manager/diagnostics
 '
   'kernel_log' 'tail -f /var/log/kern.log -n 100
 '
   'roscore' 'roscore
 '
-  'roscore' 'waitForRos; rosparam set use_sim_time false
+  'simtime' 'waitForRos; rosparam set use_sim_time false
 '
 )
 
@@ -69,18 +70,14 @@ attach="true"
 ###########################
 
 # prefere the user-compiled tmux
-if [ -f /usr/local/bin/tmux ]; then
-  export TMUX_BIN=/usr/local/bin/tmux
-else
-  export TMUX_BIN=/usr/bin/tmux
-fi
+export TMUX_BIN="/usr/bin/tmux -L mrs -f /etc/ctu-mrs/tmux.conf"
 
 # find the session
 FOUND=$( $TMUX_BIN ls | grep $SESSION_NAME )
 
 if [ $? == "0" ]; then
-
   echo "The session already exists"
+  $TMUX_BIN -2 attach-session -t $SESSION_NAME
   exit
 fi
 
@@ -89,14 +86,8 @@ SCRIPT=$(readlink -f $0)
 # Absolute path this script is in. /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
 
-if [ -z ${TMUX} ];
-then
-  TMUX= $TMUX_BIN new-session -s "$SESSION_NAME" -d
-  echo "Starting new session."
-else
-  echo "Already in tmux, leave it first."
-  exit
-fi
+TMUX= $TMUX_BIN new-session -s "$SESSION_NAME" -d
+echo "Starting new session."
 
 # get the iterator
 ITERATOR_FILE="$MAIN_DIR/$PROJECT_NAME"/iterator.txt
@@ -162,10 +153,16 @@ do
   fi
 done
 
-$TMUX_BIN -L mrs -f /etc/ctu-mrs/tmux.conf select-window -t $SESSION_NAME:$init_index
+$TMUX_BIN select-window -t $SESSION_NAME:$init_index
 
 if [[ "$attach" == "true" ]]; then
-  $TMUX_BIN -L mrs -2 attach-session -t $SESSION_NAME
+
+  if [ -z ${TMUX} ];
+  then
+    $TMUX_BIN -2 attach-session -t $SESSION_NAME
+  else
+    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME" 
+  fi
 else
   echo "The session was started"
   echo "You can later attach by calling:"
