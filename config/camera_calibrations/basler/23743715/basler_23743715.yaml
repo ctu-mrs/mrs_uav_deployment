@@ -1,0 +1,26 @@
+image_width: 800
+image_height: 600
+camera_name: basler_right
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [507.72575,   0.     , 400.55645,
+           0.     , 508.5376 , 287.29768,
+           0.     ,   0.     ,   1.     ]
+camera_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.334513, 0.081563, -0.002846, -0.001681, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1., 0., 0.,
+         0., 1., 0.,
+         0., 0., 1.]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [364.13126,   0.     , 395.70546,   0.     ,
+           0.     , 436.41907, 279.53555,   0.     ,
+           0.     ,   0.     ,   1.     ,   0.     ]

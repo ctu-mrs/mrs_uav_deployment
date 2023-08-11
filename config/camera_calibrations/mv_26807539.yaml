@@ -1,0 +1,20 @@
+image_width: 752
+image_height: 480
+camera_name: bluefox_ballon
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [468.787017, 0.000000, 383.911862, 0.000000, 467.521138, 208.704220, 0.000000, 0.000000, 1.000000]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.000942, -0.011127, -0.000432, -0.001232, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [466.336670, 0.000000, 382.924215, 0.000000, 0.000000, 466.971710, 208.406524, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000]

@@ -1,0 +1,55 @@
+#
+## DEFINITION OF THE ARENA
+#
+
+world_origin_units: "LATLON" # {"UTM, "LATLON"}
+
+world_origin_x: 49.36225
+world_origin_y: 14.26143
+
+safety_area:
+
+  use_safety_area: true
+
+  frame_name: "latlon_origin"
+
+  safety_area: [
+    49.36179, 14.26094,
+    49.36166, 14.26124,
+    49.36173, 14.26190,
+    49.36311, 14.26350,
+    49.36355, 14.26084,
+    49.36232, 14.26025,
+    49.362091, 14.260506,
+    49.361990, 14.260631,
+  ]
+
+  # convex polygon CCW
+  # safety_area: [30.9, 26.4,
+  # -45.0, 7.27,
+  # -31.5, -38.0,
+  # 44.5, -23.5]
+
+  max_z: 15.0
+  min_z: 1.0
+
+  polygon_obstacles:
+    # loaded as a vector of matrices
+    # each matrix has polygon vertices in columns
+    # [[M1], [M2]]
+    enabled: false
+    data: [1, 10, 10, 1,    5, 8, 5,
+           1, 1, 10, 10,    5, 5, 8,]
+    rows: 2 # each matrix has two rows
+    cols: [4, 3] # nums of cols of each matrix
+
+  point_obstacles:
+    # loaded as a vector of matrices
+    # x, y, radius
+    enabled: false
+    # [x1, y1, radisu1, height1,
+    #  x2, y2, radius2, height2]
+    data: [50.112116, 14.418092, 2, 4,
+           50.112214, 14.418636, 2, 4]
+    rows: 2 # each matrix has a single row
+    cols: [4, 4] # nums of cols of each matrix

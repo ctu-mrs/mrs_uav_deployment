@@ -1,0 +1,20 @@
+image_width: 752
+image_height: 480
+camera_name: bluefox_brick
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [609.952391, 0.000000, 367.664613, 0.000000, 610.025106, 248.72940, 0.000000, 0.000000, 1.000000]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-2.645492e+02, 0.000000e+00, 1.593367e-03, -2.058450e-06, 5.993015e-09]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [189.639587, 0.000000, 363.683738, 0.000000, 0.000000, 209.131226, 224.862448, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000]

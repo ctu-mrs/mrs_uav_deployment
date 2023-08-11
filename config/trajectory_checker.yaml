@@ -1,0 +1,24 @@
+trajectory_folder: "/home/mrs/git/uav_modules/ros_packages/trajectory_loader/sample_trajectories"
+trajectory_files: ["trajectory1.txt", "trajectory2.txt", "circle_10_5.txt", "eight_8ms.txt"]
+
+process_all: true # if true, all files in the trajectory_folder are processed
+
+trajectory_dt: 0.2 # (s)
+min_mutual_distance: 4.0 # (m)
+
+constraints: "fast"
+
+visualization_rviz: 
+  use: True
+  playback_speed: 10.0
+
+visualization_python:
+  trajectories: true
+  dynamics: false
+  mutual_distance: true
+
+print_info: True
+
+safety_area:
+  min_height: 1.0
+  max_height: 30.0

@@ -1,0 +1,20 @@
+image_width: 1280
+image_height: 1024
+camera_name: bluefox3_front
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [613.264977, 0.000000, 664.134970, 0.000000, 617.623470, 526.137064, 0.000000, 0.000000, 1.000000]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.249142, 0.040449, 0.007890, -0.000662, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [422.840820, 0.000000, 670.649520, 0.000000, 0.000000, 463.386993, 568.866237, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000]

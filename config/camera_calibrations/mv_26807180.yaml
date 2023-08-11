@@ -1,0 +1,20 @@
+image_width: 752
+image_height: 480
+camera_name: bluefox_optflow
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [629.907822, 0.000000, 354.173154, 0.000000, 630.301033, 223.753121, 0.000000, 0.000000, 1.000000]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.389836, 0.158040, -0.003442, -0.000469, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [530.633728, 0.000000, 345.437382, 0.000000, 0.000000, 591.130371, 220.372711, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000]

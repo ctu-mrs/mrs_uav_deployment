@@ -1,0 +1,28 @@
+# NOTE: ROS Melodic still doesn't support equidistant camera distortion model (as of 27/08/2018),
+# please use the radtan variant of this file for full ROS compatibility.
+image_width: 752
+image_height: 480
+camera_name: bluefox_optflow
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [
+    502.2799865567026, 0.0, 381.28095212257296, 
+    0.0, 502.39723998821484, 271.2807695544681,
+    0.0, 0.0, 1.0
+    ]
+distortion_model: equidistant
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [
+    -0.1578911699091652, -0.005194106096879243, 0.00501129080020691, -0.0003080601514605183
+    ]
+rectification_matrix:
+  rows: 0
+  cols: 0
+  data: []
+projection_matrix:
+  rows: 0
+  cols: 0
+  data: []

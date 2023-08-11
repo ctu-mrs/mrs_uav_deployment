@@ -1,0 +1,87 @@
+#
+## DEFINITION OF THE ARENA
+#
+
+world_origin_units: "UTM" # {"UTM, "LATLON"}
+
+# cisar race track
+world_origin_x: 458422.2
+world_origin_y: 5551241.4
+
+# # mezi stromy a lampou
+# world_origin_x: 458383.0
+# world_origin_y: 5551267.0
+
+# # mezi krtinci
+# world_origin_x: 458326
+# world_origin_y: 5551249
+
+# # Giuseppe's lamp
+# world_origin_x: 458393
+# world_origin_y: 5551259
+
+safety_area:
+
+  use_safety_area: true
+
+  frame_name: "world_origin"
+
+  max_z: 8.0
+  min_z: 1.0
+
+  # convex polygon CCW
+  # race track
+  safety_area: [30.9, 26.4,
+  -45.0, 7.27,
+  -31.5, -38.0,
+  44.5, -23.5]
+
+  # # convex polygon CCW
+  # # race track extended
+  # safety_area: [
+  # 44.8, -26.4,
+  # 31.8, 25.6,
+  # -112.2, -0.4,
+  # -48.2, -48.4
+  # ]
+
+  # # convex polygon CCW
+  # # mezi stromy a lampou
+  # safety_area: [
+  # 10.0, 10.0,
+  # -10.0, 10.0,
+  # -10.0, -10.0,
+  # 10.0, -10.0
+  # ]
+
+  # # convex polygon CCW
+  # # mezi krtinci
+  # safety_area: [
+  #   -8, -43,
+  #   52, -54,
+  #   42, 4,
+  #   14, 20,
+  #   -26, 15,
+  #   -32, -26,
+  # ]
+
+  polygon_obstacles:
+    # loaded as a vector of matrices
+    # each matrix has polygon vertices in columns
+    # [[M1], [M2]]
+    enabled: false
+    data: [1, 10, 10, 1,    5, 8, 5,
+           1, 1, 10, 10,    5, 5, 8,]
+    rows: 2 # each matrix has two rows
+    cols: [4, 3] # nums of cols of each matrix
+
+  point_obstacles:
+    # loaded as a vector of matrices
+    # x, y, radius
+    enabled: false
+    # [x1, y1, radisu1, height1,
+    #  x2, y2, radius2, height2]
+    data: [50.112116, 14.418092, 2, 4,
+           50.112214, 14.418636, 2, 4]
+    rows: 2 # each matrix has a single row
+    cols: [4, 4] # nums of cols of each matrix

@@ -1,0 +1,18 @@
+<launch>
+
+  <!-- args corresponding to environment variables -->
+  <arg name="UAV_NAME" default="$(env UAV_NAME)" />
+
+  <group ns="$(arg UAV_NAME)">
+
+    <node name="rosbag_checker" pkg="mrs_uav_general" type="rosbag_checker.py" output="screen">
+
+      <param name="uav_name" value="$(arg UAV_NAME)" />
+
+      <remap from="~status_out" to="mrs_uav_status/display_string" />
+
+    </node>
+
+  </group>
+
+</launch>
