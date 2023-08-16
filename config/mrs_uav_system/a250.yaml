@@ -1,0 +1,16 @@
+motor_params:
+  n_motors: 4
+  a:  0.22
+  b: 0.0
+
+mrs_uav_managers:
+
+  estimation_manager:
+
+    state_estimators: [
+      "gps_baro",
+    ]
+
+    initial_state_estimator: "gps_baro"
+
+    agl_height_estimator: ""
