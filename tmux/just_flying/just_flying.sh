@@ -27,7 +27,7 @@ SESSION_NAME=mav
 
 # following commands will be executed first in each window
 # * do NOT put ; at the end
-pre_input="export UAV_NAME=uav1; export RUN_TYPE=realworld; export WORLD_NAME=cisar; export UAV_MASS=2.0; export UAV_TYPE=x500; export SENSORS=''"
+pre_input=""
 
 # define commands
 # 'name' 'command'
