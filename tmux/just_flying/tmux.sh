@@ -39,6 +39,8 @@ input=(
 '
   'Sensors' 'waitForTime; roslaunch mrs_uav_deployment sensors.launch
 '
+  'Nimbro' 'waitForTime; rosrun mrs_uav_deployment run_nimbro.py ./config/network_config.yaml `rospack find mrs_uav_deployment`/config/communication_config.yaml
+'
   'HwApi' 'waitForTime; roslaunch mrs_uav_px4_api api.launch
 '
   'Status' 'waitForHw; roslaunch mrs_uav_status status.launch
@@ -160,7 +162,7 @@ if $attach; then
   then
     $TMUX_BIN -2 attach-session -t $SESSION_NAME
   else
-    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME" 
+    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME"
   fi
 else
   echo "The session was started"
