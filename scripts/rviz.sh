@@ -1,40 +1,35 @@
 #!/bin/bash
 
-if [ -f /usr/local/bin/tmux ]; then
-  TMUX_BIN=/usr/local/bin/tmux
-else
-  TMUX_BIN=/usr/bin/tmux
-fi
-
 # get path to script
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 UAV_NAME=$1
-PROJECT_NAME=monitor_$UAV_NAME
+PROJECT_NAME=rviz_$UAV_NAME
 
 # ~/.i3/detacher.sh 1 "~/.scripts/set_ros_master_uri.sh $UAV_NAME"
 
 # following commands will be executed first, in each window
-pre_input="export UAV_NAME=$UAV_NAME"
+pre_input="export UAV_NAME=$UAV_NAME; export ROS_MASTER_URI=http://$UAV_NAME:11311; unset ROS_HOSTNAME; export ROS_IP=192.168.69.11"
 
 # define commands
 # 'name' 'command'
 input=(
-  'Rviz' "waitForRos; roscd mrs_uav_testing; ${SCRIPT_PATH}/change_uav_control.sh $UAV_NAME; rosrun rviz rviz -d ${SCRIPT_PATH}/../rviz/remote_log.rviz
-  "
-  'RvizInterface' "waitForRos; roslaunch mrs_rviz_plugins rviz_interface.launch
-  "
-  'Juggler' "waitForRos; sleep 2;  ${SCRIPT_PATH}/change_uav.sh $UAV_NAME; i3 workspace "9"; rosrun plotjuggler PlotJuggler -l ${SCRIPT_PATH}/../plot_juggler/odometry.xml"
-  'Reconfigure' " waitForRos; rosrun rqt_reconfigure rqt_reconfigure"
-  'Layout' "waitForRos; sleep 2; ~/.i3/layout_manager.sh ${SCRIPT_PATH}/../layouts/remote_log.json
+  'Rviz' "waitForRos; roslaunch mrs_uav_deployment rviz.launch
 "
+  'RvizInterface' "waitForRos; roslaunch mrs_rviz_plugins rviz_interface.launch
+"
+  # 'Layout' "waitForRos; sleep 2; ~/.i3/layout_manager.sh layout.json"
 )
 
-init_window="Rosout"
+init_window="RvizInterface"
 
 ###########################
 ### DO NOT MODIFY BELOW ###
 ###########################
+
+attach=true
+
+export TMUX_BIN="/usr/bin/tmux -L mrs -f /etc/ctu-mrs/tmux.conf"
 
 SESSION_NAME=$PROJECT_NAME
 
@@ -45,14 +40,8 @@ SCRIPT=$(readlink -f $0)
 # Absolute path this script is in. /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
 
-if [ -z ${TMUX} ];
-then
-  TMUX= $TMUX_BIN new-session -s "$SESSION_NAME" -d
-  echo "Starting new session."
-else
-  echo "Already in tmux, leave it first."
-  exit
-fi
+TMUX= $TMUX_BIN new-session -s "$SESSION_NAME" -d
+echo "Starting new session."
 
 # get the iterator
 ITERATOR_FILE="$MAIN_DIR/$PROJECT_NAME"/iterator.txt
@@ -62,6 +51,7 @@ then
   ITERATOR=$(($ITERATOR+1))
 else
   echo "iterator.txt does not exist, creating it"
+  mkdir -p "$MAIN_DIR/$PROJECT_NAME"
   touch "$ITERATOR_FILE"
   ITERATOR="1"
 fi
@@ -76,8 +66,8 @@ mkdir -p "$SUBLOG_DIR"
 mkdir -p "$TMUX_DIR"
 
 # link the "latest" folder to the recently created one
-rm "$LOG_DIR/latest"
-rm "$MAIN_DIR/latest"
+rm "$LOG_DIR/latest" > /dev/null 2>&1
+rm "$MAIN_DIR/latest" > /dev/null 2>&1
 ln -sf "$SUBLOG_DIR" "$LOG_DIR/latest"
 ln -sf "$SUBLOG_DIR" "$MAIN_DIR/latest"
 
@@ -94,7 +84,7 @@ do
   $TMUX_BIN new-window -t $SESSION_NAME:$(($i+1)) -n "${names[$i]}"
 done
 
-sleep 1
+sleep 3
 
 # start loggers
 for ((i=0; i < ${#names[*]}; i++));
@@ -105,7 +95,7 @@ done
 # send commands
 for ((i=0; i < ${#cmds[*]}; i++));
 do
-  tmux send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;${pre_input};${cmds[$i]}"
+  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;${pre_input};${cmds[$i]}"
 done
 
 # identify the index of the init window
@@ -117,6 +107,18 @@ do
   fi
 done
 
-$TMUX_BIN -2 attach-session -t $SESSION_NAME
+$TMUX_BIN select-window -t $SESSION_NAME:$init_index
 
-clear
+if $attach; then
+
+  if [ -z ${TMUX} ];
+  then
+    $TMUX_BIN -2 attach-session -t $SESSION_NAME
+  else
+    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME" 
+  fi
+else
+  echo "The session was started"
+  echo "You can later attach by calling:"
+  echo "  tmux -L mrs a -t $SESSION_NAME"
+fi

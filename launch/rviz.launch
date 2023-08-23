@@ -1,0 +1,13 @@
+<launch>
+
+  <arg name="UAV_NAME" default="$(env UAV_NAME)"/>
+
+  <group>
+
+    <node pkg="mrs_uav_deployment" type="refactor_rviz_config.sh" name="anyname" output="screen" />
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d /tmp/default.rviz" launch-prefix="bash -c 'sleep 1; $0 $@' " />
+
+  </group>
+
+</launch>

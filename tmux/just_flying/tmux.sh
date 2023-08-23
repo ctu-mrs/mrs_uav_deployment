@@ -63,13 +63,12 @@ init_window="Status"
 
 # automatically attach to the new session?
 # {true, false}, default true
-attach="true"
+attach=true
 
 ###########################
 ### DO NOT MODIFY BELOW ###
 ###########################
 
-# prefere the user-compiled tmux
 export TMUX_BIN="/usr/bin/tmux -L mrs -f /etc/ctu-mrs/tmux.conf"
 
 # find the session
@@ -155,7 +154,7 @@ done
 
 $TMUX_BIN select-window -t $SESSION_NAME:$init_index
 
-if [[ "$attach" == "true" ]]; then
+if $attach; then
 
   if [ -z ${TMUX} ];
   then
