@@ -922,7 +922,11 @@
 <!--//{ RTK antenna -->
   <group if="$(eval ('rtk' in arg('SENSORS')))">
 
+    <include file="$(find mrs_serial)/launch/rtk.launch">
+    </include>
+
     <arg name="rtk_frame" default="$(arg UAV_NAME)/rtk_antenna" />
+    <arg name="rtk_frame_slashless" default="rtk_antenna_antenna" />
 
       <!-- TODO(HW guys) pls put correct TF values -->
       <group if="$(eval arg('UAV_TYPE') == 'f330')">
