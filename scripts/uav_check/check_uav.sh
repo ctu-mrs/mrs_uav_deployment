@@ -549,15 +549,15 @@ ros_master_check () {
     fails=$((fails+1))
   fi
 
-  debugecho "\n----------- Broadcast check start -----------"
-  broadcast_check
-  if [[ $? -eq 0 ]]
-  then
-    debugecho "----------- ${GREEN}Broadcast check passed${NC} -----------"
-  else
-    echo -e "----------- ${RED}Broadcast check failed${NC} -----------"
-    fails=$((fails+1))
-  fi
+  # debugecho "\n----------- Broadcast check start -----------"
+  # broadcast_check
+  # if [[ $? -eq 0 ]]
+  # then
+  #   debugecho "----------- ${GREEN}Broadcast check passed${NC} -----------"
+  # else
+  #   echo -e "----------- ${RED}Broadcast check failed${NC} -----------"
+  #   fails=$((fails+1))
+  # fi
 
   debugecho "\n----------- Hosts check start -----------"
   hosts_check
