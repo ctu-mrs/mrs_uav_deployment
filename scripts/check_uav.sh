@@ -1,0 +1,1 @@
+./uav_check/check_uav.sh
