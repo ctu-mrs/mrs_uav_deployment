@@ -299,6 +299,20 @@
 
     <!-- //} -->
 
+    <!-- left_tilted //{ -->
+
+    <group if="$(eval ('realsense_left_tilted' in arg('SENSORS').replace(',', ' ').split()))">
+
+      <group if="$(eval arg('UAV_TYPE') == 'f450')">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_slashless)" args="0.0 0.1 -0.1 1.57 0.26 0 $(arg fcu_frame) $(arg realsense_frame)" />
+      </group>
+
+      <include file="$(find realsense)/launch/uav.launch" />
+
+    </group>
+
+    <!-- //} -->
+
   </group>
 
   <!-- //} -->
