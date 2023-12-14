@@ -855,6 +855,33 @@
 
   <!-- //} -->
 
+  <!-- Basler //{ -->
+
+  <group if="$(eval ('basler' in arg('SENSORS')))">
+
+
+    <!-- basler_down //{ -->
+
+    <group if="$(eval ('basler_down' in arg('SENSORS').replace(',', ' ').split()))">
+
+      <arg name="basler_down_frame" default="$(arg UAV_NAME)/basler_down" />
+      <arg name="basler_down_optical_frame" default="$(arg UAV_NAME)/basler_down_optical" />
+      <arg name="basler_down_slashless" default="basler_down_$(arg UAV_NAME)" />
+      <arg name="basler_down_optical_slashless" default="basler_down_optical_$(arg UAV_NAME)" />
+
+      <group if="$(eval arg('UAV_TYPE') == 'm690')">
+
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg basler_down_slashless)" args="-0.06 0.16 -0.31 -1.57079632679 1.57079632679 0 $(arg fcu_frame) $(arg basler_down_frame)" />
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg basler_down_slashless)_to_$(arg basler_down_optical_slashless)" args="0 0 0 -1.57079633 0 -1.57079633 $(arg basler_down_frame) $(arg basler_down_optical_frame)" />
+
+      </group>
+
+    </group>
+
+  </group>
+
+  <!-- //} -->
+
   <!-- Ouster //{ -->
 
   <group if="$(eval 'ouster' in arg('SENSORS'))">
