@@ -9,7 +9,7 @@ PROJECT_NAME=rviz_$UAV_NAME
 # ~/.i3/detacher.sh 1 "~/.scripts/set_ros_master_uri.sh $UAV_NAME"
 
 # following commands will be executed first, in each window
-pre_input="export UAV_NAME=$UAV_NAME; export ROS_MASTER_URI=http://$UAV_NAME:11311; unset ROS_HOSTNAME; export ROS_IP=192.168.69.11"
+pre_input="export UAV_NAME=$UAV_NAME; export ROS_MASTER_URI=http://$UAV_NAME:11311; unset ROS_HOSTNAME; export ROS_IP=$(hostname -I | awk '{print $1}')"
 
 # define commands
 # 'name' 'command'
@@ -115,7 +115,7 @@ if $attach; then
   then
     $TMUX_BIN -2 attach-session -t $SESSION_NAME
   else
-    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME" 
+    tmux detach-client -E "tmux -L mrs a -t $SESSION_NAME"
   fi
 else
   echo "The session was started"

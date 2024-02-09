@@ -14,3 +14,13 @@ mrs_uav_managers:
     initial_state_estimator: "gps_baro"
 
     agl_height_estimator: ""
+
+    debug_topics:
+      input: false
+      output: false
+      state: false
+      covariance: false
+      innovation: false
+      correction: false
+      correction_delay: false
+      diagnostics: false
