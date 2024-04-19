@@ -188,6 +188,31 @@
 
   <!-- //} -->
 
+  <!-- Livox Mid360 //{ -->
+
+  <group if="$(eval 'livox_mid360' in arg('SENSORS'))">
+
+    <arg name="livox_frame" default="$(arg UAV_NAME)/livox_frame" />
+    <arg name="livox_frame_slashless" default="livox_$(arg UAV_NAME)" />
+
+    <arg name="mode" if="$(eval ('livox_indoor' in arg('SENSORS').replace(',', ' ').split()))" value="indoor" />
+    <arg name="mode" if="$(eval ('livox_outdoor' in arg('SENSORS').replace(',', ' ').split()))" value="outdoor" />
+
+      <!-- if no mode is specified, assume outdoor -->
+    <arg name="mode" if="$(eval (not ('livox_indoor' in arg('SENSORS').replace(',', ' ').split())) and (not ('livox_outdoor' in arg('SENSORS').replace(',', ' ').split())))" value="outdoor" />
+
+      <!-- TF -->
+    <group if="$(eval arg('UAV_TYPE') == 'x500')">
+      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg livox_frame_slashless)" args=" 0.011 0.02329 0.07886 0 0.0 0.0 $(arg fcu_frame) $(arg livox_frame)" />
+    </group>
+
+    <!-- The node -->
+    <include file="$(find livox_ros_driver2)/launch/msg_MID360.launch" />
+
+  </group>
+
+  <!-- //} -->
+
   <!-- Teraranger thermal //{ -->
 
   <group if="$(eval 'trinocular_thermal' in arg('SENSORS'))">
