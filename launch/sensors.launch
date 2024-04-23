@@ -106,6 +106,10 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg garmin_frame_slashless)" args="-0.19 0 -0.085 0 1.57079632679 0.0 $(arg fcu_frame) $(arg garmin_frame)" />
       </group>
 
+      <group if="$(eval arg('UAV_TYPE') == 'eaglemk2')">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg garmin_frame_slashless)" args="0.15 0 -0.05 0 1.57079632679 0.0 $(arg fcu_frame) $(arg garmin_frame)" />
+      </group>
+
     </group>
 
     <!-- TF for garmin up -->
@@ -292,6 +296,10 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_slashless)" args="0.3 0 -0.05 0 0 0 $(arg fcu_frame) $(arg realsense_frame)" />
       </group>
 
+      <group if="$(eval arg('UAV_TYPE') == 'eaglemk2')">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_slashless)" args="0.1 0 -0.1 0 0.698132 3.14159 $(arg fcu_frame) $(arg realsense_frame)" />
+      </group>
+
       <include file="$(find realsense)/launch/uav.launch" />
 
     </group>
@@ -306,8 +314,12 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.07 0.0 -0.04 0.0 1.570796326 0.0 $(arg fcu_frame) $(arg realsense_frame_down)" />
       </group>
 
-      <group if="$(eval arg('UAV_TYPE') != 'x500')">
+      <group if="$(eval arg('UAV_TYPE') != 'x500' and arg('UAV_TYPE') != 'eaglemk2')">
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.12 0.0 -0.05 0.0 1.570796326 0.0 $(arg fcu_frame) $(arg realsense_frame_down)" />
+      </group>
+
+      <group if="$(eval arg('UAV_TYPE') == 'eaglemk2')">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.1 0 -0.1 0 1.65806 0 $(arg fcu_frame) $(arg realsense_frame_down)" />
       </group>
 
       <include file="$(find realsense)/launch/uav_down.launch" />
@@ -329,6 +341,19 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_up_slashless)" args="-0.01 -0.07 0.05 0.0 -1.570796326 1.570796326 $(arg fcu_frame) $(arg realsense_frame_up)" />
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.12 0.0 -0.05 0.0 1.570796326 0.0 $(arg fcu_frame) $(arg realsense_frame_down)" />
       </group>
+
+      <include file="$(find realsense)/launch/uav_2_cameras.launch" />
+
+    </group>
+
+    <!-- //} -->
+
+    <!-- eaglemk2 //{ -->
+
+    <group if="$(eval ('realsense_eaglemk2' in arg('SENSORS').replace(',', ' ').split()))">
+
+      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_up_slashless)" args="0.19 0 -0.1 0 0.698132 3.14159 $(arg fcu_frame) $(arg realsense_frame_up)" />
+      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.22 0 -0.1 0 1.65806 0 $(arg fcu_frame) $(arg realsense_frame_down)" />
 
       <include file="$(find realsense)/launch/uav_2_cameras.launch" />
 
