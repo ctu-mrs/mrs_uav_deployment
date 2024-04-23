@@ -636,9 +636,9 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="front_cam_tf" args="0.0 0.12 -0.05 1.5708 0.0 3.1415 $(arg fcu_frame) $(arg camera_frame)" />
       </group>
 
-      <group if="$(eval arg('UAV_TYPE') != 't650')">
+      <group if="$(eval arg('UAV_TYPE') == 'f450')">
         <arg name="front_cam_yaw" default="0" />
-        <node pkg="tf2_ros" type="static_transform_publisher" name="front_cam_tf" args="0.0 0.12 -0.05 1.5708 0.0 3.1415 $(arg fcu_frame) $(arg camera_frame)" />
+        <node pkg="tf2_ros" type="static_transform_publisher" name="front_cam_tf" args="0.12 0.0 -0.05 1.5708 0.0 3.1415 $(arg fcu_frame) $(arg camera_frame)" />
       </group>
 
       <arg     if="$(arg STANDALONE)" name="nodelet" value="STANDALONE" />
