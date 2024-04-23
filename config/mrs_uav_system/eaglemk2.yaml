@@ -1,0 +1,4 @@
+motor_params:
+  n_motors: 8
+  a: 0.187581
+  b: -0.3706
