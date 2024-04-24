@@ -355,7 +355,9 @@
       <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_up_slashless)" args="0.19 0 -0.1 0 0.698132 3.14159 $(arg fcu_frame) $(arg realsense_frame_up)" />
       <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg realsense_frame_down_slashless)" args="0.22 0 -0.1 0 1.65806 0 $(arg fcu_frame) $(arg realsense_frame_down)" />
 
-      <include file="$(find realsense)/launch/uav_2_cameras.launch" />
+      <include file="$(find realsense)/launch/uav_2_cameras.launch" >
+        <arg name="depth_fps" value="15"/>
+      </include>
 
     </group>
 
@@ -913,15 +915,6 @@
 
     <!-- //} -->
 
-  </group>
-
-  <!-- //} -->
-
-  <!-- Basler //{ -->
-
-  <group if="$(eval ('basler' in arg('SENSORS')))">
-
-
     <!-- basler_down //{ -->
 
     <group if="$(eval ('basler_down' in arg('SENSORS').replace(',', ' ').split()))">
@@ -939,6 +932,8 @@
       </group>
 
     </group>
+
+    <!-- //} -->
 
   </group>
 
@@ -986,7 +981,7 @@
     </group>
 
     <group if="$(eval arg('UAV_TYPE') == 'eaglemk2')">
-      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg ouster_frame_slashless)" args="0.0 0.0 0.10 $(arg ouster_heading) 0.1745329 0.0 $(arg fcu_frame) $(arg ouster_frame)" />
+      <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg ouster_frame_slashless)" args="0.15 0.0 0.10 $(arg ouster_heading) 0.1745329 0.0 $(arg fcu_frame) $(arg ouster_frame)" />
     </group>
 
     <group if="$(eval arg('UAV_TYPE') == 'naki')">
