@@ -65,7 +65,7 @@ mrs_uav_managers:
 
       horizontal:
         speed: 8.0
-        acceleration: 2.5
+        acceleration: 3.0
         jerk: 20.0
         snap: 20.0
 
