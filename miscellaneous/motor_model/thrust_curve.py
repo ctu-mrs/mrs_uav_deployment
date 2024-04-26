@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import numpy as np
 import matplotlib.pyplot as plt
 import yaml
@@ -152,7 +154,7 @@ with open(r'tmp.yaml', 'r') as infile, open(r'output.yaml', 'w') as outfile:
     data = data.replace("'", "")
     outfile.write(data)
 
-os.remove("tmp.yaml") 
+os.remove("tmp.yaml")
 print('\nOutput written to output.yaml')
 
 if use_linear_term:
