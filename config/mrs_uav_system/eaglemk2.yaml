@@ -1,0 +1,170 @@
+uav_mass: 12.0
+
+motor_params:
+  n_motors: 8
+  a: 0.187581
+  b: -0.3706
+
+mrs_uav_managers:
+
+  uav_manager:
+
+    takeoff:
+
+      during_takeoff:
+        controller: "Se3Controller"
+        tracker: "LandoffTracker"
+
+      after_takeoff:
+        controller: "Se3Controller" # more precise
+        tracker: "MpcTracker"
+        
+      takeoff_height: 3.0
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    # available in mrs_uav_state_estimators: gps_garmin, gps_baro, rtk, ground_truth, dummy
+    state_estimators: [
+      "gps_garmin",
+      "gps_baro",
+      "rtk",
+    # "ground_truth",
+    # "dummy"
+    ]
+
+    initial_state_estimator: "rtk" # will be used as the first state estimator
+
+  constraint_manager:
+
+    constraints: [
+      "slow",
+      "medium",
+      "fast",
+      "eagle",
+    ]
+
+    allowed_constraints:
+      gps_garmin: ["slow", "medium", "fast", "eagle"]
+      gps_baro: ["slow", "medium", "fast", "eagle"]
+      rtk: ["slow", "medium", "fast", "eagle"]
+      rtk_garmin: ["slow", "medium", "fast", "eagle"]
+      other: ["slow", "medium", "fast", "eagle"]
+      ground_truth: ["slow", "medium", "fast", "eagle"]
+      passthrough: ["slow", "medium", "fast", "eagle"]
+
+    default_constraints:
+      gps_garmin: "eagle"
+      gps_baro: "eagle"
+      rtk: "eagle"
+      rtk_garmin: "eagle"
+      ground_truth: "eagle"
+      other: "eagle"
+
+    eagle:
+
+      horizontal:
+        speed: 8.0
+        acceleration: 3.0
+        jerk: 20.0
+        snap: 20.0
+
+      vertical:
+
+        ascending:
+          speed: 2.0
+          acceleration: 2.0
+          jerk: 10.0
+          snap: 5.0
+
+        descending:
+          speed: 2.0
+          acceleration: 2.0
+          jerk: 10.0
+          snap: 5.0
+
+      heading:
+        speed: 1.0
+        acceleration: 2.0
+        jerk: 20.0
+        snap: 20.0
+
+      angular_speed:
+        roll: 60.0
+        pitch: 60.0
+        yaw: 10.0
+
+      tilt: 60.0 # [deg]
+
+  gain_manager:
+
+    gains: [
+      "supersoft",
+      "soft",
+      "eagle",
+    ]
+
+    # list of allowed gains per odometry mode
+    allowed_gains:
+      gps_garmin: ["supersoft", "soft", "eagle"]
+      gps_baro: ["supersoft", "soft", "eagle"]
+      rtk: ["supersoft", "soft", "eagle"]
+      rtk_garmin: ["supersoft", "soft", "eagle"]
+      other: ["supersoft", "soft", "eagle"]
+      ground_truth: ["supersoft", "soft", "eagle"]
+      passthrough: ["supersoft", "soft", "eagle"]
+
+    # those gains will be used automatically when a localization mode switches
+    # and the current gains are not in the allowed list (next paragraphs)
+    default_gains:
+      gps_garmin: "soft"
+      gps_baro: "soft"
+      rtk: "soft"
+      rtk_garmin: "soft"
+      other: "soft"
+      ground_truth: "soft"
+      passthrough: "soft"
+
+    eagle:
+
+      horizontal:
+        kp: 5.0
+        kv: 2.5
+        ka: 1.0
+
+        kib: 0.05
+        kib_lim: 10.0
+
+        kiw: 0.05
+        kiw_lim: 10.0
+
+      vertical:
+        kp: 15.0
+        kv: 8.0
+        ka: 1.0
+
+      attitude:
+        kq_roll_pitch: 5.0
+        kq_yaw: 1.0
+
+      mass_estimator:
+        km: 0.25
+
+        # the maximum estimated uav mass difference
+        km_lim: 20.0 # [kg, at least 1/2 of the UAVs mass to allow landing detection]
+
+  control_manager:
+
+    safety:
+
+      rc_emergency_handoff:
+        enabled: true
+
+mrs_uav_trackers:
+
+  landoff_tracker:
+
+    vertical_tracker:
+
+      takeoff_speed: 1.75
+      takeoff_acceleration: 0.4

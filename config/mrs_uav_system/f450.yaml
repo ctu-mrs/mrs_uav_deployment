@@ -20,3 +20,10 @@ mrs_uav_managers:
       other: ["slow"]
       ground_truth: ["slow", "medium"]
       passthrough: ["slow", "medium"]
+
+mrs_uav_managers:
+  estimation_manager:
+    gps_garmin: # namespace of the state estimator
+      alt_garmin: # namespace of the altitude estimator
+        pos_garmin:
+          noise: 10.0 # measurement noise covariance (R)
