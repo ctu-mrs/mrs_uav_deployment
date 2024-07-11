@@ -1,0 +1,24 @@
+# num_motors - How many motors were used in this test?
+# Quadcopter - 4
+# Hexacopter - 6
+# Octacopter - 6
+# Single motor on a test stand - 1
+num_motors: 1
+
+# thrust (kg-force) produced by the motor on the test stand
+mass: [
+0.133,
+0.338,
+0.566,
+0.882,
+1.21,
+]
+
+# throttle at the test stand - value between 0 and 1, 0=0%, 1=100%
+throttle: [
+0.2,
+0.4,
+0.6,
+0.8,
+1.0,
+]
