@@ -87,6 +87,7 @@ input=(
   'michal'        'michal'  '192.168.69.90'
   'vit'           'vit'     '192.168.69.48'
   'matej'         'matej'   '192.168.69.50'
+  'ondra'         'ondra'   '192.168.69.69'
 )
 
 # get path to script
