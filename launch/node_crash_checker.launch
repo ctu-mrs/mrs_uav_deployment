@@ -5,7 +5,7 @@
 
   <group ns="$(arg UAV_NAME)">
 
-    <node name="node_crash_checker" pkg="mrs_uav_general" type="node_crash_checker.py" output="screen">
+    <node name="node_crash_checker" pkg="mrs_uav_deployment" type="node_crash_checker.py" output="screen">
 
       <param name="uav_name" value="$(arg UAV_NAME)" />
 
