@@ -1,0 +1,29 @@
+motor_params:
+  n_motors: 4
+  a: 0.77522
+  b: -1.2348
+
+mrs_uav_managers:
+
+  constraint_manager:
+
+    # list of allowed constraints per odometry mode
+    allowed_constraints:
+      gps_garmin: ["slow", "medium"]
+      gps_baro: ["slow", "medium"]
+      rtk: ["slow", "medium"]
+      rtk_garmin: ["slow", "medium"]
+      aloam: ["slow"]
+      hector_garmin: ["slow"]
+      vio: ["slow"]
+      optflow: ["slow"]
+      other: ["slow"]
+      ground_truth: ["slow", "medium"]
+      passthrough: ["slow", "medium"]
+
+mrs_uav_managers:
+  estimation_manager:
+    gps_garmin: # namespace of the state estimator
+      alt_garmin: # namespace of the altitude estimator
+        pos_garmin:
+          noise: 10.0 # measurement noise covariance (R)

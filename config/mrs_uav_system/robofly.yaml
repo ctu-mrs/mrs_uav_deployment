@@ -1,0 +1,21 @@
+# Motor thrust curve parameters
+# a - quadratic term
+# b - constant term
+# n_motors - number of motors on the UAV
+
+motor_params:
+  a: 0.348
+  b: -0.215
+  n_motors: 4
+
+mrs_uav_managers:
+  
+  estimation_manager:
+
+    state_estimators: [
+      "gps_baro",
+    ]
+
+    initial_state_estimator: "gps_baro"
+
+    agl_height_estimator: ""
