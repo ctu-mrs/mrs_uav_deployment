@@ -19,3 +19,27 @@ mrs_uav_managers:
     initial_state_estimator: "gps_baro"
 
     agl_height_estimator: ""
+
+  gain_manager:
+
+    supersoft:
+
+      mass_estimator:
+
+        km: 0.05 # [kg/s], mass estimator max rate
+
+    soft:
+
+      mass_estimator:
+
+        km: 0.05 # [kg/s], mass estimator max rate
+
+mrs_uav_controllers:
+
+  mpc_controller:
+
+    so3:
+
+      mass_estimator:
+
+        km: 0.05 # [kg/s], mass estimator max rate
