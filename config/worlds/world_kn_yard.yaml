@@ -30,5 +30,5 @@ safety_area:
     # the frame of reference in which the max&min z is expressed
     frame_name: "world_origin"
 
-    max_z: 4.0
+    max_z: 8.0
     min_z: 1.0
