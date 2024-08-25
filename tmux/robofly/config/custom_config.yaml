@@ -1,79 +1,243 @@
+mrs_uav_controllers:
+  se3_controller:
+    constraints:
+      tilt_angle_failsafe:
+        enabled: false
+
 mrs_uav_managers:
 
+  gain_manager:
+
+    estimator_types: [
+      "open_vins",
+      "vins_kickoff",
+    ]
+
+    gains: [
+      "supersoft",
+    ]
+
+    allowed_gains:
+      open_vins: ["supersoft"]
+      vins_kickoff: ["supersoft"]
+
+    default_gains:
+      open_vins: "supersoft"
+      vins_kickoff: "supersoft"
+
+
   control_manager:
+    safety:
+      rc_emergency_handoff:
+        enabled: true
+
     Se3Controller:
-      eland_threshold: 2.5
+      eland_threshold: 3.0
       failsafe_threshold: 3.5
 
   constraint_manager:
 
+    fast20:
+
+      horizontal:
+        speed: 20.0
+        acceleration: 15.0
+        jerk: 140.0
+        snap: 140.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 80.0 # [deg]
+
+    fast22:
+
+      horizontal:
+        speed: 22.0
+        acceleration: 20.0
+        jerk: 150.0
+        snap: 150.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 80.0 # [deg]
+
+    fast24:
+
+      horizontal:
+        speed: 24.0
+        acceleration: 25.0
+        jerk: 200.0
+        snap: 200.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 80.0 # [deg]
+
+    insane:
+
+      horizontal:
+        speed: 16.0
+        acceleration: 8.0
+        jerk: 120.0
+        snap: 120.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 80.0 # [deg]
+
     estimator_types: [
       "open_vins",
-			"gps_baro",
+      "vins_kickoff",
     ]
-
-    constraints: [
-      "slow",
-      "medium",
-      "fast"
-    ]
-
-    # list of allowed gains per odometry mode
-    allowed_constraints:
-      gps_baro: ["slow", "medium", "fast"]
-      open_vins: ["slow", "medium", "fast"]
 
     constraints: [
       "slow",
       "medium",
       "fast",
+      "fast20",
+      "fast22",
+      "fast24",
+      "insane",
     ]
 
+    # list of allowed gains per odometry mode
     allowed_constraints:
-      gps_baro: ["slow", "medium", "fast"]
+      open_vins: ["slow", "medium", "fast", "fast20", "fast22", "fast24", "insane"]
+      vins_kickoff: ["slow"]
 
     default_constraints:
-      gps_baro: "medium"
       open_vins: "medium"
+      vins_kickoff: "slow"
 
   estimation_manager:
 
     # loaded state estimator plugins
     # available in mrs_uav_state_estimators: gps_garmin, gps_baro, rtk, aloam, ground_truth, dummy
     state_estimators: [
-    "gps_baro",
     "open_vins",
+    "vins_kickoff",
     ]
 
-    initial_state_estimator: "gps_baro" # will be used as the first state estimator
+    initial_state_estimator: "vins_kickoff" # will be used as the first state estimator
     agl_height_estimator: "" # only slightly filtered height for checking min height (not used in control feedback)
 
-    gps_baro: # namespace of the state estimator
 
-      alt_baro: # namespace of the altitude estimator
 
-        process_noise: # process noise covariance (Q)
-          pos: 1.0 # position state
-          vel: 10.0 # velocity state
-          acc: 100.0 # acceleration state
+    # namespace of the state estimator
+    vins_kickoff:
 
-        corrections: [
-          # positional correction only makes the estimator unstable, vel_hw_api is not a derivative of pos_hw_api, vel_hw_api_only works best
-          "pos_hw_api"
-        ]
+      address: "vins_kickoff/VinsKickoffEstimatorPlugin"
 
-        pos_hw_api:
-          state_id: 0 # 0 - position, 1 - velocity, 2 - acceleration
-          noise: 0.001 # measurement noise covariance (R)
-          noise_unhealthy_coeff: 100.0 # covariance gets multiplied by this coefficient when correction is unhealthy (R)
-          message:
-            type: "geometry_msgs/PointStamped"
-            topic: "hw_api/position" # without uav namespace
-            limit: 
-              delay: 1.0 # [s] messages with higher delay will flag correction as unhealthy
-              time_since_last: 0.5 # [s] larger time step between messages will flag correction as unhealthy
+      requires: # data required from the hw api
+        gnss: false
+        imu: false
+        distance_sensor: false
+        altitude: false
+        magnetometer_heading: false
+        position: false
+        orientation: true
+        velocity: true
+        angular_velocity: true
 
-          processors: [] # types of processors attached to this measurement
+      topics:
+        orientation: "hw_api/orientation" # orientation passthrough
+        angular_velocity: "hw_api/angular_velocity" # angular velocity passthrough
+
+      kickoff:
+        target_estimator: "open_vins" # orientation passthrough
+        max_duration: 2.0 # angular velocity passthrough
 
     # namespace of the state estimator
     open_vins:
@@ -129,7 +293,6 @@ mrs_uav_managers:
 
         corrections: [
           "pos_vio",
-          "vel_hw_api"
         ]
 
         pos_vio:
@@ -144,23 +307,6 @@ mrs_uav_managers:
               time_since_last: 0.5 # [s] larger time step between messages will flag correction as unhealthy
 
           processors: [] # types of processors attached to this measurement
-
-        vel_hw_api:
-          state_id: 1 # 0 - position, 1 - velocity, 2 - acceleration
-          noise: 1.0 # measurement noise covariance (R)
-          noise_unhealthy_coeff: 100.0 # covariance gets multiplied by this coefficient when correction is unhealthy (R)
-          message:
-            type: "geometry_msgs/Vector3Stamped"
-            topic: "hw_api/velocity" # without uav namespace
-            limit: 
-              delay: 1.0 # [s] messages with higher delay will flag correction as unhealthy
-              time_since_last: 0.5 # [s] larger time step between messages will flag correction as unhealthy
-
-          processors: [] # types of processors attached to this measurement
-
-          median_filter:
-            buffer_size: 20 # the number of samples from which the median is calculated
-            max_diff: 2.0 # [m] reject measurement if difference from median is over this value
 
 
       # namespace of the heading estimator
@@ -273,6 +419,16 @@ mrs_uav_managers:
         enabled: true
         attitude_topic: "attitude" # name of the attitude topic(expects geometry_msgs/QuaternionStamped topic type)
       namespace: "estimation_manager/open_vins" # the namespace of the topic (usually the node that publishes the topic)
+      utm_based: false # if true, will publish tf to utm_origin
+      inverted: true # publish as inverted tf (the default for inverted mrs tf tree convention)
+      republish_in_frames: [] # the odometry message will be transformed and republished in the specified frames
+
+    vins_kickoff:
+      odom_topic: "odom" # name of the topic (expects nav_msgs/Odometry topic type)
+      tf_from_attitude: # used for transforming velocities before full transform is available
+        enabled: false
+        attitude_topic: "attitude" # name of the attitude topic(expects geometry_msgs/QuaternionStamped topic type)
+      namespace: "estimation_manager/vins_kickoff" # the namespace of the topic (usually the node that publishes the topic)
       utm_based: false # if true, will publish tf to utm_origin
       inverted: true # publish as inverted tf (the default for inverted mrs tf tree convention)
       republish_in_frames: [] # the odometry message will be transformed and republished in the specified frames
