@@ -35,19 +35,22 @@ pre_input=""
 # * "new line" after the command    => the command will be called after start
 # * NO "new line" after the command => the command will wait for user's <enter>
 input=(
-  'Rosbag' 'waitForTime; ./record.sh'
+  'Rosbag' ' ./record.sh'
   'Sensors' 'waitForTime; roslaunch mrs_uav_deployment sensors.launch
 '
-  'HwApi' 'waitForTime; roslaunch mrs_uav_px4_api api.launch
+  'HwApi' 'waitForTime;  roslaunch mrs_uav_px4_api api.launch
 '
   'Status' 'waitForHw; roslaunch mrs_uav_status status.launch
 '
+  'Traj' 'roslaunch mrs_uav_trajectory_loader single_uav_8.launch'
   'midair' 'rosservice call  /'"$UAV_NAME"'/uav_manager/midair_activation'
   'OpenVins' 'waitForHw; roslaunch mrs_open_vins_core robofly.launch
 '
   'VinsRepublisher' 'waitForHw; roslaunch mrs_vins_republisher vins_republisher_openvins_unreal.launch
 '
-  'Camera' 'waitForTime; roslaunch libcamera_ros uav.launch
+  'cam_mono' 'waitForTime; roslaunch libcamera_ros uav_ov.launch
+'
+  'cam_rgb' 'waitForTime; roslaunch libcamera_ros uav_imx.launch
 '
   'IMU' 'waitForTime; roslaunch mrs_icm_imu_driver imu.launch
 '
@@ -58,10 +61,6 @@ input=(
   # 'AutoStart' 'waitForHw; roslaunch mrs_uav_autostart automatic_start.launch
 # '
 # do NOT modify the command list below
-  'EstimDiag' 'waitForHw; rostopic echo /'"$UAV_NAME"'/estimation_manager/diagnostics
-'
-  'kernel_log' 'tail -f /var/log/kern.log -n 100
-'
   'roscore' 'roscore
 '
   'simtime' 'waitForRos; rosparam set use_sim_time false

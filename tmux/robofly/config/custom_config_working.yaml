@@ -1,15 +1,10 @@
-mrs_uav_controllers:
-  se3_controller:
-    constraints:
-      tilt_angle_failsafe:
-        enabled: false
-
 mrs_uav_managers:
 
   gain_manager:
 
     estimator_types: [
       "open_vins",
+      "vins_kickoff",
     ]
 
     gains: [
@@ -26,120 +21,116 @@ mrs_uav_managers:
 
 
   control_manager:
-    safety:
-      rc_emergency_handoff:
-        enabled: true
-
     Se3Controller:
-      eland_threshold: 3.0
+      eland_threshold: 2.5
       failsafe_threshold: 3.5
 
   constraint_manager:
+
+    fast10:
+
+      horizontal:
+        speed: 10.0
+        acceleration: 5.0
+        jerk: 60.0
+        snap: 60.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 60.0 # [deg]
+
+    fast12:
+
+      horizontal:
+        speed: 12.0
+        acceleration: 6.0
+        jerk: 80.0
+        snap: 80.0
+  
+      vertical:
+  
+        ascending:
+          speed: 4.0
+          acceleration: 2.0
+          jerk: 60.0
+          snap: 60.0
+  
+        descending:
+          acceleration: 2.0
+          speed: 4.0
+          snap: 60.0
+          jerk: 60.0
+  
+      heading:
+        acceleration: 2.0
+        speed: 2.0
+        snap: 40.0
+        jerk: 40.0
+  
+      angular_speed:
+        pitch: 60.0
+        roll: 60.0
+        yaw: 10.0
+  
+      tilt: 60.0 # [deg]
 
     fast14:
 
       horizontal:
         speed: 14.0
-        acceleration: 5.0
+        acceleration: 7.0
         jerk: 100.0
         snap: 100.0
   
       vertical:
   
         ascending:
-          speed: 2.0
-          acceleration: 1.0
+          speed: 4.0
+          acceleration: 2.0
           jerk: 60.0
           snap: 60.0
   
         descending:
-          acceleration: 1.0
-          speed: 2.0
+          acceleration: 2.0
+          speed: 4.0
           snap: 60.0
           jerk: 60.0
   
       heading:
-        acceleration: 1.0
-        speed: 1.0
+        acceleration: 2.0
+        speed: 2.0
         snap: 40.0
         jerk: 40.0
   
       angular_speed:
-        pitch: 40.0
-        roll: 40.0
+        pitch: 60.0
+        roll: 60.0
         yaw: 10.0
   
       tilt: 60.0 # [deg]
-
-    fast22:
-
-      horizontal:
-        speed: 22.0
-        acceleration: 20.0
-        jerk: 150.0
-        snap: 150.0
-  
-      vertical:
-  
-        ascending:
-          speed: 4.0
-          acceleration: 2.0
-          jerk: 60.0
-          snap: 60.0
-  
-        descending:
-          acceleration: 2.0
-          speed: 4.0
-          snap: 60.0
-          jerk: 60.0
-  
-      heading:
-        acceleration: 2.0
-        speed: 2.0
-        snap: 40.0
-        jerk: 40.0
-  
-      angular_speed:
-        pitch: 60.0
-        roll: 60.0
-        yaw: 10.0
-  
-      tilt: 80.0 # [deg]
-
-    fast24:
-
-      horizontal:
-        speed: 24.0
-        acceleration: 25.0
-        jerk: 200.0
-        snap: 200.0
-  
-      vertical:
-  
-        ascending:
-          speed: 4.0
-          acceleration: 2.0
-          jerk: 60.0
-          snap: 60.0
-  
-        descending:
-          acceleration: 2.0
-          speed: 4.0
-          snap: 60.0
-          jerk: 60.0
-  
-      heading:
-        acceleration: 2.0
-        speed: 2.0
-        snap: 40.0
-        jerk: 40.0
-  
-      angular_speed:
-        pitch: 60.0
-        roll: 60.0
-        yaw: 10.0
-  
-      tilt: 80.0 # [deg]
 
     insane:
 
@@ -174,7 +165,7 @@ mrs_uav_managers:
         roll: 60.0
         yaw: 10.0
   
-      tilt: 80.0 # [deg]
+      tilt: 60.0 # [deg]
 
     estimator_types: [
       "open_vins",
@@ -185,15 +176,15 @@ mrs_uav_managers:
       "slow",
       "medium",
       "fast",
+      "fast10",
+      "fast12",
       "fast14",
-      "fast22",
-      "fast24",
       "insane",
     ]
 
     # list of allowed gains per odometry mode
     allowed_constraints:
-      open_vins: ["slow", "medium", "fast", "fast14", "fast22", "fast24", "insane"]
+      open_vins: ["slow", "medium", "fast", "fast10", "fast12", "fast14", "insane"]
       vins_kickoff: ["slow"]
 
     default_constraints:
@@ -206,9 +197,10 @@ mrs_uav_managers:
     # available in mrs_uav_state_estimators: gps_garmin, gps_baro, rtk, aloam, ground_truth, dummy
     state_estimators: [
     "open_vins",
+    "vins_kickoff",
     ]
 
-    initial_state_estimator: "open_vins" # will be used as the first state estimator
+    initial_state_estimator: "vins_kickoff" # will be used as the first state estimator
     agl_height_estimator: "" # only slightly filtered height for checking min height (not used in control feedback)
 
 
