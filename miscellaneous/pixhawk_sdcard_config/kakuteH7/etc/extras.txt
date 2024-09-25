@@ -1,11 +1,11 @@
-mavlink start -d /dev/ttyS0 -b 2000000
-mavlink stream -d /dev/ttyS0 -s HIGHRES_IMU -r 100
-mavlink stream -d /dev/ttyS0 -s RC_CHANNELS -r 10
-mavlink stream -d /dev/ttyS0 -s LOCAL_POSITION_NED -r 100
-mavlink stream -d /dev/ttyS0 -s ODOMETRY -r 100
-mavlink stream -d /dev/ttyS0 -s GLOBAL_POSITION_INT -r 100
-mavlink stream -d /dev/ttyS0 -s SYS_STATUS -r 10
-mavlink stream -d /dev/ttyS0 -s DISTANCE_SENSOR -r 100
-mavlink stream -d /dev/ttyS0 -s HEARTBEAT -r 100
-mavlink stream -d /dev/ttyS0 -s UTM_GLOBAL_POSITION -r 1
+mavlink start -d /dev/ttyS2 -b 2000000
+mavlink stream -d /dev/ttyS2 -s HIGHRES_IMU -r 100
+mavlink stream -d /dev/ttyS2 -s RC_CHANNELS -r 10
+mavlink stream -d /dev/ttyS2 -s LOCAL_POSITION_NED -r 100
+mavlink stream -d /dev/ttyS2 -s ODOMETRY -r 100
+mavlink stream -d /dev/ttyS2 -s GLOBAL_POSITION_INT -r 100
+mavlink stream -d /dev/ttyS2 -s SYS_STATUS -r 10
+mavlink stream -d /dev/ttyS2 -s DISTANCE_SENSOR -r 100
+mavlink stream -d /dev/ttyS2 -s HEARTBEAT -r 100
+mavlink stream -d /dev/ttyS2 -s UTM_GLOBAL_POSITION -r 1
 usleep 100000
