@@ -12,12 +12,6 @@
   <arg name="fcu_frame" default="$(arg UAV_NAME)/fcu" />
   <arg name="fcu_frame_slashless" default="fcu_$(arg UAV_NAME)" />
 
-    <!-- Mavros -->
-
-  <group if="$(eval 'pixhawk' in arg('SENSORS'))">
-    <include file="$(find mrs_uav_px4_api)/launch/mavros_realworld.launch" />
-  </group>
-
     <!-- Sonar //{ -->
 
   <group if="$(eval 'sonar' in arg('SENSORS'))">
