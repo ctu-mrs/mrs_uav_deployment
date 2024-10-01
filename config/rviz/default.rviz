@@ -430,7 +430,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: uav1/local_origin
+    Fixed Frame: uav1/fixed_origin
     Frame Rate: 60
   Name: root
   Tools:
