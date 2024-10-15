@@ -68,6 +68,10 @@
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg garmin_frame_slashless)" args="0.0 0.1 -0.03 0 1.57079632679 0.0 $(arg fcu_frame) $(arg garmin_frame)" />
       </group>
 
+      <group if="$(eval arg('UAV_TYPE') == 'f330')">
+        <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg garmin_frame_slashless)" args="0.0 -0.1 -0.05 0 1.57079632679 0.0 $(arg fcu_frame) $(arg garmin_frame)" />
+      </group>
+
       <group if="$(eval arg('UAV_TYPE') == 'f450')">
         <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg fcu_frame_slashless)_to_$(arg garmin_frame_slashless)" args="0.0 0.1 -0.03 0 1.57079632679 0.0 $(arg fcu_frame) $(arg garmin_frame)" />
       </group>
