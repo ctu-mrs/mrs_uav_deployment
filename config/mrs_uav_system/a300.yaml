@@ -1,0 +1,7 @@
+uav_mass: 1.21 # overall mass of the drone
+
+motor_params:
+  n_motors: 4
+  a: 0.2600
+  b: -0.1765
+
