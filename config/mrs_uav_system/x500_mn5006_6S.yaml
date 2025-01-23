@@ -1,0 +1,9 @@
+# Motor thrust curve parameters
+# a - quadratic term
+# b - constant term
+# n_motors - number of motors on the UAV
+
+motor_params:
+  a: 0.245741
+  b: -0.155700
+  n_motors: 4
