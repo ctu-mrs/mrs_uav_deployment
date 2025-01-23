@@ -1,3 +1,5 @@
+# T-Motor MN5006 KV450 + T-motor 14in CF prop, 6S 8000mAh LiPo
+
 # num_motors - How many motors were used in this test?
 # Quadcopter - 4
 # Hexacopter - 6
@@ -6,12 +8,12 @@ num_motors: 4
 
 # mass (kg) of the UAV, or thrust (kg-force) produced by the motor on the test stand
 mass: [
-2.909,
-3.570,
+4.275,
+5.6,
 ]
 
 # throttle needed to hover - value between 0 and 1, 0=0%, 1=100%
 throttle: [
-0.577,
-0.65,
+0.64,
+0.755,
 ]
