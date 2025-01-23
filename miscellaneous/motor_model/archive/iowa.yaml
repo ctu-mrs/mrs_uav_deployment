@@ -1,0 +1,23 @@
+# KDE2315XF-965 - motor, MR Series 9x4.5 prop - master airscrew, 4S LiPo
+
+# num_motors - How many motors were used in this test?
+# Quadcopter - 4
+# Hexacopter - 6
+# Single motor on a test stand - 1
+num_motors: 4
+
+# What is the throttle PWM value when the throttle is set to max or min?
+pwm_min: 999
+pwm_max: 1999
+
+# mass (kg) of the UAV, or thrust (kg-force) produced by the motor on the test stand
+mass: [
+1.365,
+1.9,
+]
+
+# throttle PWM value needed to hover - value between 0 and 1, 0=0%, 1=100%
+pwm_throttle: [
+1480,
+1690,
+]

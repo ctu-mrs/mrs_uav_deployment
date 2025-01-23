@@ -1,0 +1,21 @@
+# Indiar UAV with 6S battery (3x 5000mAh li-ion)
+
+# num_motors - How many motors were used in this test?
+# Quadcopter - 4
+# Hexacopter - 6
+# Single motor on a test stand - 1
+num_motors: 4
+
+# mass (kg) of the UAV, or thrust (kg-force) produced by the motor on the test stand
+mass: [
+3.2,
+4.075,
+5.40,
+]
+
+# throttle needed to hover - value between 0 and 1, 0=0%, 1=100%
+throttle: [
+0.305,
+0.37,
+0.485,
+]
