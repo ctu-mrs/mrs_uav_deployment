@@ -1,9 +1,9 @@
-uav_mass: 12.0
+uav_mass: 15.0
 
 motor_params:
   n_motors: 8
-  a: 0.187581
-  b: -0.3706
+  a: 0.119423
+  b: -0.036887
 
 mrs_uav_managers:
 
@@ -64,37 +64,37 @@ mrs_uav_managers:
     eagle:
 
       horizontal:
-        speed: 8.0
-        acceleration: 3.0
-        jerk: 20.0
-        snap: 20.0
+        speed: 7.0
+        acceleration: 4.0
+        jerk: 100.0
+        snap: 80.0
 
       vertical:
 
         ascending:
-          speed: 2.0
+          speed: 3.0
           acceleration: 2.0
-          jerk: 10.0
-          snap: 5.0
+          jerk: 100.0
+          snap: 80.0
 
         descending:
-          speed: 2.0
+          speed: 3.0
           acceleration: 2.0
-          jerk: 10.0
-          snap: 5.0
+          jerk: 100.0
+          snap: 80.0
 
       heading:
         speed: 1.0
-        acceleration: 2.0
-        jerk: 20.0
-        snap: 20.0
+        acceleration: 1.0
+        jerk: 100.0
+        snap: 80.0
 
       angular_speed:
         roll: 60.0
         pitch: 60.0
         yaw: 10.0
 
-      tilt: 60.0 # [deg]
+      tilt: 70.0 # [deg]
 
   gain_manager:
 
