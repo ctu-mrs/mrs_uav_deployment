@@ -41,7 +41,7 @@ install(
 )
 
 install(
-  DIRECTORY scripts tmux
+  DIRECTORY scripts
   USE_SOURCE_PERMISSIONS
   DESTINATION share/${PROJECT_NAME}
 )
