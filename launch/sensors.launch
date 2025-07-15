@@ -206,7 +206,7 @@
 
   <group if="$(eval 'livox_mid360' in arg('SENSORS'))">
 
-    <arg name="livox_frame" default="$(arg UAV_NAME)/livox" />
+    <arg name="livox_frame" default="$(arg UAV_NAME)/livox_frame" />
     <arg name="livox_frame_slashless" default="livox_$(arg UAV_NAME)" />
 
     <arg name="mode" if="$(eval ('livox_indoor' in arg('SENSORS').replace(',', ' ').split()))" value="indoor" />
