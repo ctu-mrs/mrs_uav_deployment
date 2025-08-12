@@ -35,7 +35,7 @@ pre_input="export RMW_IMPLEMENTATION=rmw_zenoh_cpp"
 # * "new line" after the command    => the command will be called after start
 # * NO "new line" after the command => the command will wait for user's <enter>
 input=(
-  'Rosbag' './record.sh
+  'Rosbag' 'waitForOffboard; ./record.sh
 '
   'HwApi' 'ros2 launch mrs_uav_px4_api api.py
 '

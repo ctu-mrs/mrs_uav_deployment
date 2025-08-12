@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path="~/bag_files/"
+path="~/bag_files/latest"
 
 # By default, we record everything.
 # Except for this list of EXCLUDED topics:
