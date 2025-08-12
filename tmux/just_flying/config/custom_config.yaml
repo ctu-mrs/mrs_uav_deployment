@@ -1,0 +1,36 @@
+mrs_uav_managers:
+
+  estimation_manager:
+
+    # loaded state estimator plugins
+    # available in mrs_uav_state_estimators: gps_garmin, gps_baro, rtk, aloam, ground_truth, dummy
+    state_estimators: [
+    "gps_baro",
+    "gps_garmin",
+    # "rtk",
+    # "aloam",
+    # "ground_truth",
+    # "dummy"
+    ]
+
+    initial_state_estimator: "gps_garmin" # will be used as the first state estimator
+    agl_height_estimator: "garmin_agl" # only slightly filtered height for checking min height (not used in control feedback)
+
+
+  #Config for the MRS UAV Status topic rate display
+  
+  #want_hz - fill out topic to be monitored, "topic_name display_name nominal_rate(Hz)"
+  #topic_name - if you ommit "/" in the begining of the topic name, the $UAV_NAME namespace will be filled out automatically
+  #nominal_rate - this is used to change the display color of the topic if the rate is not close to nominal rate. Use "+" (e.g. 30+) to set just the lower bound
+  
+  #tf_static_list - fill out topic to be monitored, when a specified static_tf is present
+  #format - "tf_name topic_name display_name nominal_rate(Hz)", same rules apply as in the want_hz filed
+mrs_uav_status:
+  want_hz: [
+        # "basler_left/camera_info UV_CAM_left 60",
+        # "/oak/rgb/camera_info OAK-D 10",
+        # "rplidar/scan RPlidar 10+",
+        ]
+  tf_static_list: [
+      # "os_sensor os_cloud_nodelet/is_alive Ouster 10",
+  ]
