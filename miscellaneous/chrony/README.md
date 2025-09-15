@@ -9,6 +9,17 @@ sudo chronyc -a makestep
 
 BTW, the computers should (probably) be in the same timezone.
 
+## Possible system's clock rate change
+
+Chrony synchronizes the time by adjusting the system's clock rate by up to ~8% (by default). This means that if chrony is active and the declared time server is not in sync (the makestep command has not been called), use of chrony leads to nonnegligible constant change of system's clock rate. Be aware that if chrony is installed, it will start automatically at boot whenever NTP-based automatic clock synchronization is enabled. So do not forget to disable chrony or NTP-based time synchronization if you do not plan to use it. To disable NTP-based synchronization, run:
+```bash
+sudo timedatectl set-ntp off
+```
+To temporary disable chrony, run:
+```bash
+sudo service chrony restart
+```
+
 ## install chrony client
 
 ```bash
