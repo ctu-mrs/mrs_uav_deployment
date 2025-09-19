@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path="~/bag_files/latest"
+target_path="$HOME/bag_files/latest"
 
 # By default, we record everything.
 # Except for this list of EXCLUDED topics:
@@ -15,12 +15,19 @@ exclude=(
 # what can be recorded. Recording too much data can lead to
 # ROS communication hiccups, which can lead to eland, failsafe
 # or just a CRASH.
+
+# this is how you exclude a topic with the use of wildcards
+# '.*control_manager.*'
 )
 
-# file's header
-filename=`mktemp`
+if [ ! -e "$target_path" ]; then
+  mkdir -p "$target_path"
+fi
 
-echo -n "cd $path; ros2 bag record -a" >> "$filename"
+# file's header
+filename=$(mktemp)
+
+echo -n "cd $target_path; ros2 bag record -a" >> "$filename"
 
 # if there is anything to exclude
 if [ "${#exclude[*]}" -gt 0 ]; then
@@ -40,4 +47,4 @@ fi
 
 cat $filename
 
-eval `cat $filename`
+eval $(cat "$filename")
