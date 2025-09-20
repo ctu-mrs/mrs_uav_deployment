@@ -37,15 +37,15 @@ pre_input="export RMW_IMPLEMENTATION=rmw_zenoh_cpp"
 input=(
   'Rosbag' 'waitForOffboard; ./record.sh
 '
-  'HwApi' 'ros2 launch mrs_uav_px4_api api.py
+  'HwApi' 'ros2 launch mrs_uav_px4_api api.launch.py
 '
-  'Mavros' 'ros2 launch mrs_uav_px4_api mavros_realworld.py
+  'Mavros' 'ros2 launch mrs_uav_px4_api mavros_realworld.launch.py
 '
   'Status' 'ros2 run mrs_uav_status status.sh
 '
-  'Core' 'ros2 launch mrs_uav_core core.py platform_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/mrs_uav_system/$UAV_TYPE.yaml world_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/worlds/world_$WORLD_NAME.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
+  'Core' 'ros2 launch mrs_uav_core core.launch.py platform_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/mrs_uav_system/$UAV_TYPE.yaml world_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/worlds/world_$WORLD_NAME.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
 '
-  'AutoStart' 'ros2 launch mrs_uav_autostart automatic_start.py
+  'AutoStart' 'ros2 launch mrs_uav_autostart automatic_start.launch.py
 '
 # do NOT modify the command list below
   'EstimDiag' 'waitForCore; ros2 topic echo /'"$UAV_NAME"'/estimation_manager/diagnostics --flow-style
