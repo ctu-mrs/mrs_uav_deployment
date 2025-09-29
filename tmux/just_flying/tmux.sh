@@ -39,8 +39,6 @@ input=(
 '
   'HwApi' 'ros2 launch mrs_uav_px4_api api.launch.py
 '
-  'Mavros' 'ros2 launch mrs_uav_px4_api mavros_realworld.launch.py
-'
   'Status' 'ros2 run mrs_uav_status status.sh
 '
   'Core' 'ros2 launch mrs_uav_core core.launch.py platform_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/mrs_uav_system/$UAV_TYPE.yaml world_config:=`ros2 pkg prefix mrs_uav_deployment`/share/mrs_uav_deployment/config/worlds/world_$WORLD_NAME.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
