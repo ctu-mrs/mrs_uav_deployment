@@ -1,0 +1,15 @@
+#!/bin/sh
+
+for f in ssh/*; do
+  case "$f" in
+    *.pub | *.sh) continue ;;
+  esac
+
+  chmod 600 "$f"
+  ssh-keygen -P '' -yf $f > /dev/null 2>&1
+
+  if [ $? -eq 0 ]; then
+    printf "%s is not password encrypted\n" "$f"
+    exit 1
+  fi
+done
