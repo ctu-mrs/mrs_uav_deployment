@@ -11,3 +11,5 @@ It will run a script on every commit that checks if the ssh keys are encrypted, 
 ```bash
 sh .ci/pre-commit
 ```
+
+The same script will run as an on push workflow and delete your commit if it fails
