@@ -18,6 +18,7 @@ jobs:
       - name: Check for unencrypted ssh keys
         id: ssh
         run: |
+          set +e
           sh .ci/pre-commit
           echo "rc=$?" >> $GITHUB_OUTPUT
         continue-on-error: true
