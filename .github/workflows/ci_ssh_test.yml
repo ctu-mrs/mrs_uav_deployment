@@ -24,7 +24,6 @@ jobs:
           set +e
           sh .ci/pre-commit
           echo "rc=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
 
       - name: Delete commit if unencrypted ssh keys were found
         if: steps.ssh.outputs.rc != '0'
