@@ -36,6 +36,12 @@ install(
 # )
 
 install(
+  DIRECTORY tmux
+  USE_SOURCE_PERMISSIONS
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(
   DIRECTORY config ssh
   DESTINATION share/${PROJECT_NAME}
 )
