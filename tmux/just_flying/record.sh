@@ -37,10 +37,19 @@ if [ "${#exclude[*]}" -gt 0 ]; then
   # list all the strings and separate the with |
   for ((i=0; i < ${#exclude[*]}; i++));
   do
-    echo "\"${exclude[$i]}\"" >> "$filename"
-    if [ "$i" -lt "$( expr ${#exclude[*]} - 1)" ]; then
-      echo -n " " >> "$filename"
+
+    if [ "$i" -eq "0" ]; then
+      echo -n "\"(" >> "$filename"
     fi
+
+    echo -n "${exclude[$i]}" >> "$filename"
+
+    if [ "$i" -lt "$( expr ${#exclude[*]} - 1)" ]; then
+      echo -n "|" >> "$filename"
+    else
+      echo -n ")\"" >> "$filename"
+    fi
+
   done
 
 fi
