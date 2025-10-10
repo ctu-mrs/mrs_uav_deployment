@@ -19,7 +19,7 @@ mrs_uav_managers:
       optflow: ["slow"]
       other: ["slow"]
       ground_truth: ["slow", "medium"]
-      passthrough: ["slow", "medium"]
+      passthrough: ["slow", "medium", "fast"]
 
 mrs_uav_managers:
   estimation_manager:
