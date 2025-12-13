@@ -1,34 +1,42 @@
-world_origin:
+mrs_uav_managers:
 
-  units: "LATLON" # {"UTM, "LATLON"}
+  world_origin:
 
-  origin_x: 0.0
-  origin_y: 0.0
+    units: "LATLON" # {"UTM, "LATLON"}
 
-safety_area:
+    origin_x: 0.0
+    origin_y: 0.0
 
-  enabled: true
+  safety_area_manager:
 
-  horizontal:
+    safety_area:
 
-    # the frame of reference in which the points are expressed
-    frame_name: "local_origin"
+      enabled: true
 
-    # polygon
-    #
-    # x, y [m] for any frame_name except latlon_origin
-    # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
-    points: [
-      -5, -5,
-      5, -5,
-      5, 5,
-      -5, 5,
-    ]
+      horizontal:
 
-  vertical:
+        # the frame of reference in which the points are expressed
+        frame_name: "local_origin"
 
-    # the frame of reference in which the max&min z is expressed
-    frame_name: "local_origin"
+        # polygon
+        #
+        # x, y [m] for any frame_name except latlon_origin
+        # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
+        points: [
+          -5, -5,
+          5, -5,
+          5, 5,
+          -5, 5,
+        ]
 
-    max_z: 4.0
-    min_z: 1.0
+      vertical:
+
+        # the frame of reference in which the max&min z is expressed
+        frame_name: "local_origin"
+
+        max_z: 4.0
+        min_z: 1.0
+
+      obstacles:
+
+        present: false

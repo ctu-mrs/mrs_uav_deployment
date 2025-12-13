@@ -1,69 +1,77 @@
-world_origin:
+mrs_uav_managers:
 
-  units: "UTM" # {"UTM, "LATLON"}
+  world_origin:
 
-  # cisar race track
-  origin_x: 458422.2
-  origin_y: 5551241.4
+    units: "UTM" # {"UTM, "LATLON"}
 
-  # # mezi stromy a lampou
-  # origin_x: 458383.0
-  # origin_y: 5551267.0
-
-  # # mezi krtinci
-  # origin_x: 458326
-  # origin_y: 5551249
-
-safety_area:
-
-  enabled: true
-
-  horizontal:
-
-    # the frame of reference in which the points are expressed
-    frame_name: "world_origin"
-
-    # polygon
-    #
-    # x, y [m] for any frame_name except latlon_origin
-    # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
-    points: [
-      30.9, 26.4,
-      -45.0, 7.27,
-      -31.5, -38.0,
-      44.5, -23.5,
-    ]
-
-    # # race track extended
-    # points: [
-    #   44.8, -26.4,
-    #   31.8, 25.6,
-    #   -112.2, -0.4,
-    #   -48.2, -48.4,
-    # ]
+    # cisar race track
+    origin_x: 458422.2
+    origin_y: 5551241.4
 
     # # mezi stromy a lampou
-    # points: [
-    #   10.0, 10.0,
-    #   -10.0, 10.0,
-    #   -10.0, -10.0,
-    #   10.0, -10.0,
-    # ]
+    # origin_x: 458383.0
+    # origin_y: 5551267.0
 
     # # mezi krtinci
-    # points: [
-    #   -8, -43,
-    #   52, -54,
-    #   42, 4,
-    #   14, 20,
-    #   -26, 15,
-    #   -32, -26,
-    # ]
+    # origin_x: 458326
+    # origin_y: 5551249
 
-  vertical:
+  safety_area_manager:
 
-    # the frame of reference in which the max&min z is expressed
-    frame_name: "world_origin"
+    safety_area:
 
-    max_z: 25.0
-    min_z: 1.0
+      enabled: true
+
+      horizontal:
+
+        # the frame of reference in which the points are expressed
+        frame_name: "world_origin"
+
+        # polygon
+        #
+        # x, y [m] for any frame_name except latlon_origin
+        # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
+        points: [
+          30.9, 26.4,
+          -45.0, 7.27,
+          -31.5, -38.0,
+          44.5, -23.5,
+        ]
+
+        # # race track extended
+        # points: [
+        #   44.8, -26.4,
+        #   31.8, 25.6,
+        #   -112.2, -0.4,
+        #   -48.2, -48.4,
+        # ]
+
+        # # mezi stromy a lampou
+        # points: [
+        #   10.0, 10.0,
+        #   -10.0, 10.0,
+        #   -10.0, -10.0,
+        #   10.0, -10.0,
+        # ]
+
+        # # mezi krtinci
+        # points: [
+        #   -8, -43,
+        #   52, -54,
+        #   42, 4,
+        #   14, 20,
+        #   -26, 15,
+        #   -32, -26,
+        # ]
+
+      vertical:
+
+        # the frame of reference in which the max&min z is expressed
+        frame_name: "world_origin"
+
+        max_z: 25.0
+        min_z: 1.0
+
+      obstacles:
+
+        present: false

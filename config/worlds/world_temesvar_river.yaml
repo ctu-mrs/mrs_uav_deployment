@@ -1,42 +1,50 @@
-world_origin:
+mrs_uav_managers:
 
-  units: "LATLON" # {"UTM, "LATLON"}
+  world_origin:
 
-  origin_x: 49.365135
-  origin_y: 14.272215
+    units: "LATLON" # {"UTM, "LATLON"}
 
-safety_area:
+    origin_x: 49.365135
+    origin_y: 14.272215
 
-  enabled: true
+  safety_area_manager:
 
-  horizontal:
+    safety_area:
 
-    # the frame of reference in which the points are expressed
-    frame_name: "latlon_origin"
+      enabled: true
 
-    # polygon
-    #
-    # x, y [m] for any frame_name except latlon_origin
-    # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
-    points: [
-      49.365026, 14.272144,
-      49.364743, 14.272950,
-      49.364634, 14.273025,
-      49.364518, 14.273262,
+      horizontal:
 
-      49.36441444, 14.2735815,
-      49.3648846, 14.27493205,
-      49.3657157, 14.27439695,
+        # the frame of reference in which the points are expressed
+        frame_name: "latlon_origin"
 
-      49.366022, 14.273663,
-      49.366196, 14.270896,
-      49.365222, 14.270628,
-    ]
+        # polygon
+        #
+        # x, y [m] for any frame_name except latlon_origin
+        # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
+        points: [
+          49.365026, 14.272144,
+          49.364743, 14.272950,
+          49.364634, 14.273025,
+          49.364518, 14.273262,
 
-  vertical:
+          49.36441444, 14.2735815,
+          49.3648846, 14.27493205,
+          49.3657157, 14.27439695,
 
-    # the frame of reference in which the max&min z is expressed
-    frame_name: "world_origin"
+          49.366022, 14.273663,
+          49.366196, 14.270896,
+          49.365222, 14.270628,
+        ]
 
-    max_z: 10.0
-    min_z: -1.0
+      vertical:
+
+        # the frame of reference in which the max&min z is expressed
+        frame_name: "world_origin"
+
+        max_z: 10.0
+        min_z: -1.0
+
+      obstacles:
+
+        present: false
