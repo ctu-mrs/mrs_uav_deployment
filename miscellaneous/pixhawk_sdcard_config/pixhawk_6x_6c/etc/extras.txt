@@ -10,4 +10,5 @@ mavlink stream -d /dev/ttyS1 -s SYS_STATUS -r 10
 mavlink stream -d /dev/ttyS1 -s DISTANCE_SENSOR -r 100
 mavlink stream -d /dev/ttyS1 -s HEARTBEAT -r 100
 mavlink stream -d /dev/ttyS1 -s UTM_GLOBAL_POSITION -r 1
+mavlink stream -d /dev/ttyS1 -s SERVO_OUTPUT_RAW -r 1
 usleep 100000
