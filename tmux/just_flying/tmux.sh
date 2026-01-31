@@ -15,7 +15,7 @@ source $HOME/.bashrc
 
 # location for storing the bag files
 # * do not change unless you know what you are doing
-MAIN_DIR=~/"bag_files"
+MAIN_DIR="$HOME/bag_files"
 
 # the project name
 # * is used to define folder name in ~/$MAIN_DIR

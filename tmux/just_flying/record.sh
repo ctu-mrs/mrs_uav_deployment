@@ -18,6 +18,9 @@ exclude=(
 
 # this is how you exclude a topic with the use of wildcards
 # '.*control_manager.*'
+
+# this is how you exclude the image_raw namespace WITHOUT excluding its subnamespaces
+# '.*camera/image_raw$'
 )
 
 if [ ! -e "$target_path" ]; then
