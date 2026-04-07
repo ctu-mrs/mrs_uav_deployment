@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Polygon Viewer</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #map { height: 600px; width: 100%; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        body { background-color: #f8fafc; }
+        .custom-checkbox:checked { background-color: currentColor; border-color: transparent; background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e"); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">Coordinate Polygon Viewer</h1>
+                <p class="text-slate-600">Toggle visibility and inspect area coordinates.</p>
+            </div>
+            <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm text-sm font-medium text-slate-500">
+                <span id="active-count">7</span> Areas Visible
+            </div>
+        </header>
+
+        <!-- Map and Legend Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+            <div id="map" class="lg:col-span-3"></div>
+            
+            <!-- Controls Sidebar -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Layer Visibility</h2>
+                <div id="controls" class="space-y-3">
+                    <!-- Checkboxes will be injected here or managed via standard HTML -->
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly1" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-red-500 transition focus:ring-red-500">
+                        <span class="text-slate-700 group-hover:text-red-600 font-medium">Polygon 1 (Red)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly2" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-emerald-500 transition focus:ring-emerald-500">
+                        <span class="text-slate-700 group-hover:text-emerald-600 font-medium">Polygon 2 (Green)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly3" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-blue-500 transition focus:ring-blue-500">
+                        <span class="text-slate-700 group-hover:text-blue-600 font-medium">Polygon 3 (Blue)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly4" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-yellow-500 transition focus:ring-yellow-500">
+                        <span class="text-slate-700 group-hover:text-yellow-600 font-medium">Polygon 4 (Yellow)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly5" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-cyan-500 transition focus:ring-cyan-500">
+                        <span class="text-slate-700 group-hover:text-cyan-600 font-medium">Polygon 5 (Cyan)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly6" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-fuchsia-500 transition focus:ring-fuchsia-500">
+                        <span class="text-slate-700 group-hover:text-fuchsia-600 font-medium">Polygon 6 (Magenta)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer group">
+                        <input type="checkbox" checked data-id="poly7" class="custom-checkbox h-5 w-5 rounded border-slate-300 text-orange-500 transition focus:ring-orange-500">
+                        <span class="text-slate-700 group-hover:text-orange-600 font-medium">Polygon 7 (Orange)</span>
+                    </label>
+                </div>
+                
+                <hr class="my-4 border-slate-100">
+                
+                <button id="btn-fit-all" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-lg transition">
+                    Recenter Map
+                </button>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 px-1">Coordinate Data Details</h2>
+            
+            <div id="data-accordion" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Polygons Data will be rendered here for cleaner UI -->
+            </div>
+
+            <!-- Origin Crosshairs -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                <div class="p-4 bg-red-50 border border-red-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-red-800 uppercase mb-1">Red Origin</h3>
+                    <code class="text-red-600 font-mono text-sm">49.36275, 14.260778</code>
+                </div>
+                <div class="p-4 bg-green-50 border border-green-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-green-800 uppercase mb-1">Green Origin</h3>
+                    <code class="text-green-600 font-mono text-sm">49.362417, 14.261556</code>
+                </div>
+                <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-blue-800 uppercase mb-1">Blue Origin</h3>
+                    <code class="text-blue-600 font-mono text-sm">49.361944, 14.262167</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        window.onload = function() {
+            // Data Structure
+            const layers = {
+                poly1: {
+                    name: "Polygon 1", color: "red", hex: "#ef4444", fill: true,
+                    coords: [[49.362139, 14.260444], [49.363417, 14.260139], [49.363417, 14.262028], [49.361972, 14.260750]]
+                },
+                poly2: {
+                    name: "Polygon 2", color: "#10b981", hex: "#10b981", fill: true,
+                    coords: [[49.361972, 14.260750], [49.363417, 14.262028], [49.362778, 14.263472], [49.361833, 14.260972]]
+                },
+                poly3: {
+                    name: "Polygon 3", color: "#3b82f6", hex: "#3b82f6", fill: true,
+                    coords: [[49.361833, 14.260972], [49.362778, 14.263472], [49.361889, 14.263694], [49.361722, 14.261250]]
+                },
+                poly4: {
+                    name: "Polygon 4", color: "#eab308", hex: "#eab308", fill: false,
+                    coords: [[49.36179, 14.26094], [49.36166, 14.26124], [49.36173, 14.26190], [49.36311, 14.26350], [49.36355, 14.26084], [49.36232, 14.26025], [49.362091, 14.260506], [49.361990, 14.260631]]
+                },
+                poly5: {
+                    name: "Polygon 5", color: "#06b6d4", hex: "#06b6d4", fill: true,
+                    coords: [[49.362139, 14.260444], [49.363417, 14.260139], [49.363417, 14.262028], [49.362778, 14.263472], [49.361833, 14.260972]]
+                },
+                poly6: {
+                    name: "Polygon 6", color: "#d946ef", hex: "#d946ef", fill: true,
+                    coords: [[49.361972, 14.260750], [49.363417, 14.262028], [49.362778, 14.263472], [49.361889, 14.263694], [49.361722, 14.261250]]
+                },
+                poly7: {
+                    name: "Polygon 7", color: "#f97316", hex: "#f97316", fill: true,
+                    coords: [[49.362139, 14.260444], [49.363417, 14.260139], [49.363417, 14.262028], [49.362778, 14.263472], [49.361889, 14.263694], [49.361722, 14.261250]]
+                }
+            };
+
+            const map = L.map('map');
+            const layerGroups = {};
+
+            // Tiles
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            }).addTo(map);
+
+            L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.png', {
+                subdomains: 'abcd', opacity: 0.6
+            }).addTo(map);
+
+            // Origin Crosshairs (Permanent)
+            const redOrigin = [49.36275, 14.260778];
+            const greenOrigin = [49.362417, 14.261556];
+            const blueOrigin = [49.361944, 14.262167];
+
+            function drawCross(center, color) {
+                const crossSize = 0.000075; 
+                L.polyline([[center[0] - crossSize, center[1]], [center[0] + crossSize, center[1]]], {color: color, weight: 2}).addTo(map);
+                L.polyline([[center[0], center[1] - crossSize], [center[0], center[1] + crossSize]], {color: color, weight: 2}).addTo(map);
+                L.circleMarker(center, { radius: 1.5, color: color, fillOpacity: 1 }).addTo(map);
+            }
+            drawCross(redOrigin, 'red');
+            drawCross(greenOrigin, '#10b981');
+            drawCross(blueOrigin, '#3b82f6');
+
+            // Initialize Polygons and Info Accordion
+            const accordion = document.getElementById('data-accordion');
+            
+            Object.keys(layers).forEach(id => {
+                const data = layers[id];
+                const group = L.featureGroup();
+                
+                // Add Polygon
+                const poly = L.polygon(data.coords, {
+                    color: data.color,
+                    fillColor: data.color,
+                    fillOpacity: data.fill ? 0.2 : 0,
+                    weight: 2,
+                    dashArray: '5, 5'
+                }).addTo(group);
+
+                // Add vertices
+                data.coords.forEach(c => {
+                    L.circleMarker(c, {
+                        radius: 3, 
+                        color: data.color, 
+                        fillColor: 'white', 
+                        fillOpacity: 1, 
+                        weight: 1
+                    }).addTo(group);
+                });
+
+                group.addTo(map);
+                layerGroups[id] = group;
+
+                // Add to Accordion UI
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-xl border border-slate-200 shadow-sm';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-bold flex items-center" style="color: ${data.hex}">
+                            <span class="w-2 h-2 rounded-full mr-2" style="background-color: ${data.hex}"></span>
+                            ${data.name}
+                        </h3>
+                        <span class="text-xs text-slate-400 font-mono">${data.coords.length} vertices</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-1">
+                        ${data.coords.map(c => `<code class="text-[10px] bg-slate-50 p-1 rounded border border-slate-100 text-slate-600">${c[0]}, ${c[1]}</code>`).join('')}
+                    </div>
+                `;
+                accordion.appendChild(card);
+            });
+
+            // Visibility Logic
+            const checkboxes = document.querySelectorAll('#controls input[type="checkbox"]');
+            const countDisplay = document.getElementById('active-count');
+
+            function updateCount() {
+                const active = document.querySelectorAll('#controls input[type="checkbox"]:checked').length;
+                countDisplay.innerText = active;
+            }
+
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const id = e.target.dataset.id;
+                    if (e.target.checked) {
+                        map.addLayer(layerGroups[id]);
+                    } else {
+                        map.removeLayer(layerGroups[id]);
+                    }
+                    updateCount();
+                });
+            });
+
+            // Initial Bounds
+            const allLayers = Object.values(layerGroups);
+            const initialGroup = L.featureGroup(allLayers);
+            map.fitBounds(initialGroup.getBounds(), { padding: [50, 50] });
+
+            document.getElementById('btn-fit-all').onclick = () => {
+                const visibleLayers = Object.keys(layers)
+                    .filter(id => document.querySelector(`[data-id="${id}"]`).checked)
+                    .map(id => layerGroups[id]);
+                
+                if (visibleLayers.length > 0) {
+                    map.fitBounds(L.featureGroup(visibleLayers).getBounds(), { padding: [50, 50] });
+                }
+            };
+        };
+    </script>
+</body>
+</html>
