@@ -1,0 +1,35 @@
+world_origin:
+
+  units: "LATLON" # {"UTM, "LATLON"}
+
+  origin_x: 49.362417
+  origin_y: 14.261556
+
+safety_area:
+
+  enabled: true
+
+  horizontal:
+
+    # the frame of reference in which the points are expressed
+    frame_name: "latlon_origin"
+
+    # polygon
+    #
+    # x, y [m] for any frame_name except latlon_origin
+    # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
+    points: [
+      49.361972, 14.260750
+      49.363417, 14.262028
+      49.362778, 14.263472
+      49.361833, 14.260972
+    ]
+
+  vertical:
+
+    # the frame of reference in which the max&min z is expressed
+    frame_name: "world_origin"
+
+    max_z: 15.0
+    min_z: 1.0
+

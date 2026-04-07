@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Polygon Viewer</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #map { height: 600px; width: 100%; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        body { background-color: #f8fafc; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold text-slate-800">Coordinate Polygon Viewer</h1>
+            <p class="text-slate-600">Visualizing multiple areas and origin crosshairs on satellite imagery.</p>
+        </header>
+
+        <div id="map" class="mb-6"></div>
+
+        <div class="space-y-6">
+            <!-- Polygon 1 Info -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-semibold mb-3 text-red-700 flex items-center">
+                    <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span> Polygon 1 (Red Dash)
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.362139, 14.260444</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.363417, 14.260139</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.363417, 14.262028</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361972, 14.260750</code></div>
+                </div>
+            </div>
+
+            <!-- Polygon 2 Info -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-semibold mb-3 text-green-700 flex items-center">
+                    <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span> Polygon 2 (Green Dash)
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361972, 14.260750</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.363417, 14.262028</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.362778, 14.263472</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361833, 14.260972</code></div>
+                </div>
+            </div>
+
+            <!-- Polygon 3 Info -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-semibold mb-3 text-blue-700 flex items-center">
+                    <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span> Polygon 3 (Blue Dash)
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361833, 14.260972</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.362778, 14.263472</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361889, 14.263694</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361722, 14.261250</code></div>
+                </div>
+            </div>
+
+            <!-- Polygon 4 Info (Yellow) -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-semibold mb-3 text-yellow-600 flex items-center">
+                    <span class="w-3 h-3 border-2 border-yellow-500 rounded-full mr-2"></span> Polygon 4 (Yellow Dash - No Fill)
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36179, 14.26094</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36166, 14.26124</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36173, 14.26190</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36311, 14.26350</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36355, 14.26084</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.36232, 14.26025</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.362091, 14.260506</code></div>
+                    <div class="p-2 bg-slate-50 rounded border border-slate-100"><code class="text-xs">49.361990, 14.260631</code></div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-red-50 border border-red-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-red-800 uppercase mb-1">Red Cross (Origin)</h3>
+                    <code class="text-red-600 font-mono text-sm">49.36275, 14.260778</code>
+                </div>
+                <div class="p-4 bg-green-50 border border-green-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-green-800 uppercase mb-1">Green Cross (Origin)</h3>
+                    <code class="text-green-600 font-mono text-sm">49.362417, 14.261556</code>
+                </div>
+                <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                    <h3 class="text-xs font-bold text-blue-800 uppercase mb-1">Blue Cross (Origin)</h3>
+                    <code class="text-blue-600 font-mono text-sm">49.361944, 14.262167</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        window.onload = function() {
+            // Polygon coordinates
+            const redCoords = [
+                [49.362139, 14.260444], [49.363417, 14.260139], [49.363417, 14.262028], [49.361972, 14.260750]
+                <!-- [49.362139, 14.260444], [49.363417, 14.260139], [49.363417, 14.262028], [49.362778, 14.263472], [49.361833, 14.260972] -->
+      
+            ];
+            const greenCoords = [
+                [49.361972, 14.260750], [49.363417, 14.262028], [49.362778, 14.263472], [49.361833, 14.260972]
+                <!-- [49.361972, 14.260750], [49.363417, 14.262028], [49.362778, 14.263472], [49.361889, 14.263694], [49.361722, 14.261250], -->
+            ];
+            const blueCoords = [
+                [49.361833, 14.260972], [49.362778, 14.263472], [49.361889, 14.263694], [49.361722, 14.261250]
+            ];
+            const yellowCoords = [
+                [49.36179, 14.26094], [49.36166, 14.26124], [49.36173, 14.26190], [49.36311, 14.26350],
+                [49.36355, 14.26084], [49.36232, 14.26025], [49.362091, 14.260506], [49.361990, 14.260631]
+            ];
+
+            // Origins
+            const redOrigin = [49.36275, 14.260778];
+            const greenOrigin = [49.362417, 14.261556];
+            const blueOrigin = [49.361944, 14.262167];
+
+            const map = L.map('map');
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            }).addTo(map);
+
+            L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.png', {
+                subdomains: 'abcd', opacity: 0.6
+            }).addTo(map);
+
+            const commonStyle = { fillOpacity: 0.2, weight: 2, dashArray: '5, 5' };
+
+            // Draw Polygons
+            const poly1 = L.polygon(redCoords, { ...commonStyle, color: 'red', fillColor: '#f03' }).addTo(map);
+            const poly2 = L.polygon(greenCoords, { ...commonStyle, color: '#10b981', fillColor: '#10b981' }).addTo(map);
+            const poly3 = L.polygon(blueCoords, { ...commonStyle, color: '#3b82f6', fillColor: '#3b82f6' }).addTo(map);
+            
+            // Yellow Polygon: No fill
+            const poly4 = L.polygon(yellowCoords, { 
+                color: '#eab308', 
+                fill: false, 
+                weight: 2, 
+                dashArray: '5, 5' 
+            }).addTo(map);
+
+            function drawCross(map, center, color) {
+                const crossSize = 0.000075; 
+                const weight = 2;
+                L.polyline([[center[0] - crossSize, center[1]], [center[0] + crossSize, center[1]]], {color: color, weight: weight}).addTo(map);
+                L.polyline([[center[0], center[1] - crossSize], [center[0], center[1] + crossSize]], {color: color, weight: weight}).addTo(map);
+                L.circleMarker(center, { radius: 1.5, color: color, fillOpacity: 1 }).addTo(map);
+            }
+
+            drawCross(map, redOrigin, 'red');
+            drawCross(map, greenOrigin, '#10b981');
+            drawCross(map, blueOrigin, '#3b82f6');
+
+            const group = new L.featureGroup([poly1, poly2, poly3, poly4]);
+            map.fitBounds(group.getBounds(), { padding: [50, 50] });
+
+            // Dots for vertices
+            redCoords.forEach(c => L.circleMarker(c, {radius: 3, color: 'red', fillColor: 'white', fillOpacity: 1, weight: 1}).addTo(map));
+            greenCoords.forEach(c => L.circleMarker(c, {radius: 3, color: '#10b981', fillColor: 'white', fillOpacity: 1, weight: 1}).addTo(map));
+            blueCoords.forEach(c => L.circleMarker(c, {radius: 3, color: '#3b82f6', fillColor: 'white', fillOpacity: 1, weight: 1}).addTo(map));
+            yellowCoords.forEach(c => L.circleMarker(c, {radius: 2, color: '#eab308', fillColor: 'white', fillOpacity: 1, weight: 1}).addTo(map));
+        };
+    </script>
+</body>
+</html>
