@@ -19,10 +19,10 @@ safety_area:
     # x, y [m] for any frame_name except latlon_origin
     # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
     points: [
-      49.361972, 14.260750
-      49.363417, 14.262028
-      49.362778, 14.263472
-      49.361833, 14.260972
+      49.361972, 14.260750,
+      49.363417, 14.262028,
+      49.362778, 14.263472,
+      49.361833, 14.260972,
     ]
 
   vertical:
