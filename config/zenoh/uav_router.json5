@@ -1,16 +1,25 @@
 /// Based on /opt/ros/jazzy/share/rmw_zenoh_cpp/config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
+
+/// This configuration controls the ROS2 traffic between multiple hosts.
+/// Inter-host traffic between the nodes of an individual host is specified by session config and "should" not be influenced by the settings, however, results may vary and it is discouraged to for example change the node from the "router" mode.
+/// Refer to the original file above for in-detail explanation and treat the following comments as a field-guide.
+
 {
-  /// WARNING: this id must be unique in your zenoh network.
+  /// WARNING: this id must be unique in your zenoh network. By default, it is assigned by random.
   // id: "1234567890abcdef",
 
-  /// The node's mode (router, peer or client)
+  /// The node's mode (router, peer or client). Do not change.
   mode: "router",
+
+
 
   connect: {
     /// timeout waiting for all endpoints connected (0: no retry, -1: infinite timeout)
     timeout_ms: { router: -1, peer: -1, client: 0 },
 
     /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
+
+    /// 
     endpoints: [
       // "tcp/uav30:7447",
     ],
@@ -75,5 +84,116 @@
         },
       },
     },
+  },
+
+  /// Downsampling is equivalent to the Nimbro topic throttling, e.g. enables to set maximal frequency at which the topic is allowed to flow in (ingress) and out (egress) of the host.
+  /// As an example, we configure downsampling of all topics in the namespace rgbd (which is default the default mrs_realsense UAV node config at the time of writing).
+
+  //downsampling: [
+  //  {
+
+  /// Optional ID, has to be unique
+  //   id: "realsense_throttle",
+
+  /// Specifify which host interfaces the throttling is applied to, here a wi-fi adapter
+  //   interfaces : ["wlp1s0"]
+
+  /// Specify all message types, just in case.
+  //    messages: [
+  //      "delete",
+  //      "put",
+  //      "query",
+  //      "reply",
+  //    ],
+
+  /// This is the important part, setting the topic filter and maximal frequency at which the topic can flow into/out of the host.
+  /// By default, Zenoh prepends the topics by the namespace of the Zenoh router specified in "id" above, so the key expression has to account for it by the use of wildcards.
+  /// Official documentation can be found at "https://zenoh.io/docs/manual/abstractions/#key-expression".
+  //    rules: [
+  //      {
+  /// Such a key_expr covers all topics containing the "rgbd" node namespace.
+  //        key_expr: "**/rgbd/**",
+  //        freq: 1.0
+  //      },
+  //    ],
+  // },
+  //],
+
+
+  /// Zenoh Access Control enables specifying which data can flow in/out the host based on rules.
+  /// See "https://zenoh.io/docs/manual/access-control/" for thorough documentation.
+
+  /// Zenoh works on-demand, e.g. a data starts flowing only once a subscriber actively engages with the publisher (on a different host).
+  /// However, the "/tf" and "/tf_static" topics are not namespaced so the traffic rules are mandatory unless traffic is denied by default.
+
+  /// We enable the ACS ("enabled" : true) but allow all traffic by default ("default_permission": "allow").
+  access_control: {
+    "enabled": true,
+    "default_permission": "allow",
+
+  /// Here we specify the ROS2 message types, flows, and multiple possible key expressions which the rule will apply to.
+    "rules": [
+      {
+        "id": "deny_tf_over_network",
+        "messages": [
+          "put", "delete",
+          "declare_subscriber", "declare_queryable",
+          "query", "reply",
+          "liveliness_token", "liveliness_query",
+          "declare_liveliness_subscriber"
+        ],
+        "flows": ["egress","ingress"],
+        "permission": "deny",
+        "key_exprs": [
+          "*/tf",
+          "*/tf/**",
+          "*/tf_static",
+          "*/tf_static/**",
+        ]
+      },
+    /// Similarly to the realsense downsampling rule, the following configuration completely blocks all camera traffic in/out of the host.
+    /// Note the differences in .json structure ( id -> "id").
+      {
+        "id": "deny_realsense_over_network",
+        "messages": [
+          "put", "delete",
+          "declare_subscriber", "declare_queryable",
+          "query", "reply",
+          "liveliness_token", "liveliness_query",
+          "declare_liveliness_subscriber"
+        ],
+        "flows": ["egress","ingress"],
+        "permission": "deny",
+        "key_exprs": [
+          "**/rgbd/**",
+        ]
+      }
+    ],
+
+    /// Subjects specify interfaces, cryptography rules and even link protocols to which the ACS rules are applied to.
+    "subjects": [
+      {
+        "id": "local_loopback",
+        "interfaces": ["lo", "lo0"]
+      },
+      {
+        "id": "wifi_interfaces",
+        "interfaces": ["wlan0", "wlp2s0"]
+      }
+    ],
+
+    /// Policies assign rules to the subjects.
+    "policies": [
+      {
+        "id": "wifi_block_tf",
+        "rules": ["deny_tf_over_network"],
+        "subjects": ["wifi_interfaces"]
+      },
+      {
+        "id": "wifi_block_realsense",
+        "rules": ["deny_realsense_over_network"],
+        "subjects": ["wifi_interfaces"]
+      }
+    ]
   },
 }

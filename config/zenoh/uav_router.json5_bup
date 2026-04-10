@@ -1,0 +1,79 @@
+/// Based on /opt/ros/jazzy/share/rmw_zenoh_cpp/config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
+{
+  /// WARNING: this id must be unique in your zenoh network.
+  // id: "1234567890abcdef",
+
+  /// The node's mode (router, peer or client)
+  mode: "router",
+
+  connect: {
+    /// timeout waiting for all endpoints connected (0: no retry, -1: infinite timeout)
+    timeout_ms: { router: -1, peer: -1, client: 0 },
+
+    /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
+    endpoints: [
+      // "tcp/uav30:7447",
+    ],
+
+    /// exit from application, if timeout exceed
+    exit_on_failure: { router: false, peer: false, client: true },
+    /// connect establishing retry configuration
+    retry: {
+      /// initial wait timeout until next connect try
+      period_init_ms: 1000,
+      /// maximum wait timeout until next connect try
+      period_max_ms: 4000,
+      /// increase factor for the next timeout until nexti connect try
+      period_increase_factor: 2,
+    },
+  },
+
+  /// Which endpoints to listen on. E.g. tcp/0.0.0.0:7447.
+  listen: {
+    /// timeout waiting for all listen endpoints (0: no retry, -1: infinite timeout)
+    timeout_ms: 0,
+
+    /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
+    endpoints: [
+      "tcp/[::]:7447"
+    ],
+
+    /// exit from application, if timeout exceed
+    exit_on_failure: true,
+    /// listen retry configuration
+    retry: {
+      /// initial wait timeout until next try
+      period_init_ms: 1000,
+      /// maximum wait timeout until next try
+      period_max_ms: 4000,
+      /// increase factor for the next timeout until next try
+      period_increase_factor: 2,
+    },
+  },
+
+  /// Configure internal transport parameters
+  transport: {
+    link: {
+      /// Configure the zenoh TX parameters of a link
+      tx: {
+        /// Link lease duration in milliseconds to announce to other zenoh nodes
+        lease: 10000,
+        /// Number of keep-alive messages in a link lease duration. If no data is sent, keep alive
+        keep_alive: 4,
+        /// Each zenoh link has a transmission queue that can be configured
+        queue: {
+          /// Congestion occurs when the queue is empty (no available batch).
+          congestion_control: {
+            /// Behavior pushing CongestionControl::Drop messages to the queue.
+            drop: {
+              /// The maximum time in microseconds to wait for an available batch before dropping a droppable message if still no batch is available.
+              wait_before_drop: 1000000,
+              /// The maximum deadline limit for multi-fragment messages.
+              max_wait_before_drop_fragments: 50000,
+            },       
+          },
+        },
+      },
+    },
+  },
+}
