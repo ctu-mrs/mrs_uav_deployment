@@ -11,8 +11,6 @@
   /// The node's mode (router, peer or client). Do not change.
   mode: "router",
 
-
-
   connect: {
     /// timeout waiting for all endpoints connected (0: no retry, -1: infinite timeout)
     timeout_ms: { router: -1, peer: -1, client: 0 },
@@ -133,24 +131,27 @@
 
   /// Here we specify the ROS2 message types, flows, and multiple possible key expressions which the rule will apply to.
     "rules": [
+
+    "rules": [
       {
         "id": "deny_tf_over_network",
-        "messages": [
-          "put", "delete",
-          "declare_subscriber", "declare_queryable",
-          "query", "reply",
-          "liveliness_token", "liveliness_query",
-          "declare_liveliness_subscriber"
-        ],
+        "messages": ["put", "delete", "declare_subscriber", "query", "reply","declare_queryable", "liveliness_token", "liveliness_query", "declare_liveliness_subscriber"],        
         "flows": ["egress","ingress"],
         "permission": "deny",
         "key_exprs": [
-          "*/tf",
-          "*/tf/**",
-          "*/tf_static",
-          "*/tf_static/**",
+          "**/rt/tf",
+          "**/rt/tf/**",
+          "**/rt/tf_static",
+          "**/rt/tf_static/**",
+          "**/rt/uas1/**",
+          "**/rt/uas1/mavlink_source/**",
+          "**/rt/uas1/mavlink_sink/**",
+          "**/rt/uas1/mavlink_source",
+          "**/mavlink_sink/**",
+          "**/mavlink_source/**",
         ]
       },
+
     /// Similarly to the realsense downsampling rule, the following configuration completely blocks all camera traffic in/out of the host.
     /// Note the differences in .json structure ( id -> "id").
       {
@@ -185,9 +186,9 @@
     /// Policies assign rules to the subjects.
     "policies": [
       {
-        "id": "wifi_block_tf",
+        "id": "block_tf",
         "rules": ["deny_tf_over_network"],
-        "subjects": ["wifi_interfaces"]
+        "subjects": ["wifi_interfaces, local_loopback"]
       },
       {
         "id": "wifi_block_realsense",
