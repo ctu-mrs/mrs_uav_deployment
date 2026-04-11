@@ -124,14 +124,12 @@
   /// Zenoh works on-demand, e.g. a data starts flowing only once a subscriber actively engages with the publisher (on a different host).
   /// However, the "/tf" and "/tf_static" topics are not namespaced so the traffic rules are mandatory unless traffic is denied by default.
 
-  /// We enable the ACS ("enabled" : true) but allow all traffic by default ("default_permission": "allow").
+  /// We enable the ACL ("enabled" : true) but allow all traffic by default ("default_permission": "allow").
   access_control: {
     "enabled": true,
     "default_permission": "allow",
 
   /// Here we specify the ROS2 message types, flows, and multiple possible key expressions which the rule will apply to.
-    "rules": [
-
     "rules": [
       {
         "id": "deny_tf_over_network",
@@ -188,7 +186,7 @@
       {
         "id": "block_tf",
         "rules": ["deny_tf_over_network"],
-        "subjects": ["wifi_interfaces, local_loopback"]
+        "subjects": ["wifi_interfaces", "local_loopback"]
       },
       {
         "id": "wifi_block_realsense",
