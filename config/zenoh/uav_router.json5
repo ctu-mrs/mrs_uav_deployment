@@ -4,6 +4,13 @@
 /// Inter-host traffic between the nodes of an individual host is specified by session config and "should" not be influenced by the settings, however, results may vary and it is discouraged to for example change the node from the "router" mode.
 /// Refer to the original file above for in-detail explanation and treat the following comments as a field-guide.
 
+///
+/// ----------- READ BEFORE USE ----------- 
+///
+/// Configure the router for specific UAV type and/or your PC by re-placing the value "wlp2s0" with the full name of the wi-fi interface on the machine the config file is used on. Use "bash ifconfig" to find out.
+/// On PC or "main" UAV, specify end-points as IP addresses/hostnames of the other machines to be networked. Always include the interface.
+///
+
 {
   /// WARNING: this id must be unique in your zenoh network. By default, it is assigned by random.
   // id: "1234567890abcdef",
@@ -15,11 +22,9 @@
     /// timeout waiting for all endpoints connected (0: no retry, -1: infinite timeout)
     timeout_ms: { router: -1, peer: -1, client: 0 },
 
-    /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
-
-    /// 
+    /// Configure IP addresses or hostnames of the other connected machines and include the local network interface.
     endpoints: [
-      // "tcp/uav30:7447",
+      // "tcp/uav30:7447#wlp2s0",
     ],
 
     /// exit from application, if timeout exceed
@@ -40,9 +45,8 @@
     /// timeout waiting for all listen endpoints (0: no retry, -1: infinite timeout)
     timeout_ms: 0,
 
-    /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
     endpoints: [
-      "tcp/[::]:7447"
+      "tcp/[::]:7447#wlp2s0"
     ],
 
     /// exit from application, if timeout exceed
@@ -94,7 +98,7 @@
   //   id: "realsense_throttle",
 
   /// Specifify which host interfaces the throttling is applied to, here a wi-fi adapter
-  //   interfaces : ["wlp1s0"]
+  //   interfaces : ["wlp2s0"]
 
   /// Specify all message types, just in case.
   //    messages: [
@@ -132,21 +136,16 @@
   /// Here we specify the ROS2 message types, flows, and multiple possible key expressions which the rule will apply to.
     "rules": [
       {
-        "id": "deny_tf_over_network",
+        "id": "deny_non_namespaced_over_network",
         "messages": ["put", "delete", "declare_subscriber", "query", "reply","declare_queryable", "liveliness_token", "liveliness_query", "declare_liveliness_subscriber"],        
         "flows": ["egress","ingress"],
         "permission": "deny",
         "key_exprs": [
-          "**/rt/tf",
-          "**/rt/tf/**",
-          "**/rt/tf_static",
-          "**/rt/tf_static/**",
-          "**/rt/uas1/**",
-          "**/rt/uas1/mavlink_source/**",
-          "**/rt/uas1/mavlink_sink/**",
-          "**/rt/uas1/mavlink_source",
-          "**/mavlink_sink/**",
-          "**/mavlink_source/**",
+          "**/tf/**",
+          "**/tf",
+          "**/tf_static/**",
+          "**/tf_static",
+          "**/uas1/**",
         ]
       },
 
@@ -184,8 +183,8 @@
     /// Policies assign rules to the subjects.
     "policies": [
       {
-        "id": "block_tf",
-        "rules": ["deny_tf_over_network"],
+        "id": "block_non_namespaced",
+        "rules": ["deny_non_namespaced_over_network"],
         "subjects": ["wifi_interfaces", "local_loopback"]
       },
       {
@@ -195,4 +194,26 @@
       }
     ]
   },
+
+ /// The QOS override is required so the network stack does clog up with the un-droppable "/tf_static" messages set as "reliable" because of the ACL rules above.
+ qos: {
+   /// Overwrite QoS options for PUT and DELETE messages
+   publication: [
+     {
+       /// PUT and DELETE messages on key expressions that are included by these key expressions
+       /// will have their QoS options overwritten by the given config.
+       key_exprs: ["**"], /// that's all traffic
+       /// Configurations that will be applied on the publisher.
+       /// Options that are supplied here will overwrite the configuration given in Zenoh API
+       config: {
+         congestion_control: "drop",
+         priority: "data_low",
+         express: true,
+         reliability: "best_effort",
+         allowed_destination: "remote",
+       },
+     },
+   ],
+  },
+
 }
