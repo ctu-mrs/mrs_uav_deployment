@@ -4,8 +4,8 @@ mrs_uav_managers:
 
     units: LATLON  # {"UTM, "LATLON"}
 
-    origin_x: 51.855236
-    origin_y: 11.412953
+    origin_x: 51.85476
+    origin_y: 11.40975
 
   safety_area_manager:
 
@@ -23,14 +23,14 @@ mrs_uav_managers:
         # x, y [m] for any frame_name except latlon_origin
         # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
         points:
-          - 51.855705
-          - 11.410560
-          - 51.854204
-          - 11.411013
-          - 51.854750
-          - 11.415156
-          - 51.856325
-          - 11.414612
+          - 51.85539
+          - 11.41218
+          - 51.85363
+          - 11.41280
+          - 51.85288
+          - 11.40744
+          - 51.85465
+          - 11.40689
       vertical:
 
         # the frame of reference in which the max&min z is expressed
