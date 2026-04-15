@@ -24,7 +24,7 @@
 
     /// Configure IP addresses or hostnames of the other connected machines and include the local network interface.
     endpoints: [
-      // "tcp/uav30:7447#wlp2s0",
+      // "tcp/uav30:7447#iface=wlp2s0",
     ],
 
     /// exit from application, if timeout exceed
