@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- IMPORTANT NOTE
+This config did not fly yet. Use with caution. See internal/networking_knowhow for more info.
+-->
+
+<!-- PREPEND THIS INTO tmux.sh
+# NECESSARY FOR LARGE PAYLOADS IN JAZZY.
+sudo sysctl -w net.core.rmem_max=2147483647 # NECESSARY
+sudo sysctl -w net.core.wmem_max=2147483647
+sudo sysctl -w net.core.wmem_default=2147483647
+sudo ip link set lo multicast on # NECESSARY
+-->
+<CycloneDDS xmlns="https://cdds.io/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://cdds.io/config
+https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+  <Domain Id="any"> <!-- This selects what domains the settings apply to. -->
+      <General>
+        <AllowMulticast>true</AllowMulticast> <!-- EXTRA IMPORTANT TO ENABLE! -->
+        <EnableMulticastLoopback>true</EnableMulticastLoopback> <!-- LIKELY VERY IMPORTANT TO ENABLE! -->
+        <MaxMessageSize>65507B</MaxMessageSize> <!-- DO NOT GO OVER 65kB, UDP won't handle it on loopback.  -->
+        <FragmentSize>1400B</FragmentSize> <!-- This needs to heed the Ethernet MTU. -->
+        <Interfaces>
+          <!-- This allows Cyclone to use any interface bound to the MRS subnet, whichever device name they are. I.e., this should work both for your laptop and your drones.  -->
+          <NetworkInterface address="192.168.69.0" autodetermine="false" priority="1"/>
+
+          <!-- This should allow using intra-robot loopback routing. -->
+          <NetworkInterface name="lo" autodetermine="false" priority="default"/>
+        </Interfaces>
+        <DontRoute>false</DontRoute><!-- Seems like not having an effect. -->
+      </General>
+      <Discovery>
+        <!-- Do not specify peers explicitly. It will only break things! -->
+        <EnableTopicDiscoveryEndpoints>true</EnableTopicDiscoveryEndpoints> <!-- Effect unknown. -->
+        <ParticipantIndex>none</ParticipantIndex> <!-- NECESSARY! But requires multicast discovery! -->
+      </Discovery>
+      <Internal>
+        <SocketSendBufferSize    min="100MB"/>
+        <SocketReceiveBufferSize min="100MB"/> <!-- Necessary for bigger messages. -->
+        <MonitorPort>0</MonitorPort> <!-- Useful for debugging and inspection. -->
+        <MaxSampleSize>1GB</MaxSampleSize>
+      </Internal>
+      <Partitioning> <!-- Let's hope this hides topics between UAVs by default. -->
+        <NetworkPartitions>
+          <NetworkPartition Address="127.0.0.1" Name="intra"/> <!-- Although this is not clean multicast address, it effectively isolates data traffic. -->
+          <!--NetworkPartition Address="239.255.0.1"    Name="intra" Interface="lo"/--> <!-- Likely, this is not yet supported in ROS Jazzy. -->
+          <NetworkPartition Address="239.255.195.35" Name="inter"/>
+        </NetworkPartitions>
+        <PartitionMappings>
+          <PartitionMapping NetworkPartition="inter" DCPSPartitionTopic="*.rt/*/rgbd/color/image_raw/compressed"/>
+          <PartitionMapping NetworkPartition="inter" DCPSPartitionTopic="*.rt/*/hw_api/status"/>
+          <PartitionMapping NetworkPartition="intra" DCPSPartitionTopic="*.*"/>
+        </PartitionMappings>
+      </Partitioning>
+  </Domain>
+</CycloneDDS>
+
