@@ -40,7 +40,7 @@
     ///
     /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
     endpoints: [
-      // "<proto>/<address>"
+      // "tcp/192.168.69.1:7447"
     ],
 
     /// Global connect configuration,
@@ -416,6 +416,15 @@
         ]
       },
       {
+        "id": "allow_egress",
+        "messages": ["put", "declare_subscriber", "declare_queryable", "delete", "query", "reply", "liveliness_token", "declare_liveliness_subscriber", "liveliness_query"],
+        "flows": ["egress"],
+        "permission": "allow",
+        "key_exprs": [
+        "**/tf/**", 
+        ]
+      },
+      {
         "id": "allow_all",      
         "messages": ["put", "declare_subscriber", "declare_queryable", "delete", "query", "reply", "liveliness_token", "declare_liveliness_subscriber", "liveliness_query"],
         "flows": ["egress", "ingress"],
@@ -433,7 +442,7 @@
       },
       {
         "id": "wifi_interfaces",
-        "interfaces": ["wlan0"]
+        "interfaces": ["wlan0", "wlp1s0"]
       }
     ],
 
@@ -441,7 +450,7 @@
     "policies": [
       {
         "id": "allow_list_wifi",
-        "rules": ["allow_list"],
+        "rules": ["allow_list", "allow_egress"],
         "subjects": ["wifi_interfaces"]
       },
       {
