@@ -422,6 +422,7 @@
         "permission": "allow",
         "key_exprs": [
         "**/tf/**", 
+        "**/tf_static/**"
         ]
       },
       {
