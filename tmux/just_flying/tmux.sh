@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ### BEGIN INIT INFO
 # Provides: tmux
 # Required-Start:    $local_fs $network dbus
@@ -65,7 +65,7 @@ attach=true
 ### DO NOT MODIFY BELOW ###
 ###########################
 
-export TMUX_BIN="/usr/bin/tmux -L mrs -f /etc/ctu-mrs/tmux.conf"
+export TMUX_BIN="tmux -L mrs -f $(ros2 pkg prefix mrs_uav_core)/share/mrs_uav_core/config/tmux.conf"
 
 # find the session
 FOUND=$( $TMUX_BIN ls | grep $SESSION_NAME )
