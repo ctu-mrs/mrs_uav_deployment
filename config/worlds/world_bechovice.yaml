@@ -1,0 +1,41 @@
+# DERIVED FROM HERE: https://earth.google.com/earth/d/1YJkZ7HL-lqSol7liQmmqarN-W4iJOjFu?usp=drive_link
+
+mrs_uav_managers:
+  world_origin:
+    units: "LATLON" # {"UTM, "LATLON"}
+
+    # MZ
+    origin_x: 50.0908246
+    origin_y: 14.6345189
+
+    # JH
+    origin_x: 50.0905466
+    origin_y: 14.6343125
+
+  safety_area_manager:
+    safety_area:
+
+      enabled: true
+
+      horizontal:
+
+        # the frame of reference in which the points are expressed
+        frame_name: "latlon_origin"
+
+        # polygon
+        #
+        # x, y [m] for any frame_name except latlon_origin
+        # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
+        points: [
+          50.0905258, 14.6327381, # NW
+          50.0896023, 14.6330607, # SW
+          50.0902173, 14.6348664, # SE
+          50.0910495, 14.6346838, # NE
+        ]
+
+      vertical:
+        # the frame of reference in which the max&min z is expressed
+        frame_name: "world_origin"
+        max_z: 35.0
+        min_z: 1.0
+

@@ -40,7 +40,8 @@
     ///
     /// See https://docs.rs/zenoh/latest/zenoh/config/struct.EndPoint.html
     endpoints: [
-      // "tcp/192.168.69.1:7447"
+    //"tcp/192.168.69.105:7447", 
+    //"tcp/192.168.69.112:7447"
     ],
 
     /// Global connect configuration,
@@ -399,78 +400,113 @@
   // ],
 
   // /// Configure access control (ACL) rules
-  access_control: {
-    "enabled": true,
-    "default_permission": "deny",
-
-  /// Here we specify the ROS2 message types, flows, and multiple possible key expressions which the rule will apply to.
-    "rules": [
-      {
-        "id": "allow_list",
-        "messages": ["put", "declare_subscriber", "declare_queryable", "delete", "query", "reply", "liveliness_token", "declare_liveliness_subscriber", "liveliness_query"],
-        "flows": ["ingress", "egress"],
-        "permission": "allow",
-        "key_exprs": [
-        "**/diagnostics/**", 
-        "@ros2_lv/**"
-        ]
-      },
-      {
-        "id": "allow_tf_ingress",
-        "messages": ["declare_subscriber", "declare_queryable", "delete", "query", "reply", "declare_liveliness_subscriber", "liveliness_query"],
-        "flows": ["ingress"],
-        "permission": "allow",
-        "key_exprs": [
-        "**/tf/**", 
-        "**/tf_static/**"
-        ]
-      },
-      {
-        "id": "allow_tf_egress",
-        "messages": ["put"],
-        "flows": ["egress"],
-        "permission": "allow",
-        "key_exprs": [
-        "**/tf/**", 
-        "**/tf_static/**"
-        ]
-      },
-      {
-        "id": "allow_all",      
-        "messages": ["put", "declare_subscriber", "declare_queryable", "delete", "query", "reply", "liveliness_token", "declare_liveliness_subscriber", "liveliness_query"],
-        "flows": ["egress", "ingress"],
-        "permission": "allow",
-        "key_exprs": [
-        "**",
-        "@ros2_lv/**"]      
-        }    
-    ],
-
-    "subjects": [
-      {
-        "id": "local_loopback",
-        "interfaces": ["lo", "lo0"]
-      },
-      {
-        "id": "wifi_interfaces",
-        "interfaces": ["wlan0", "wlp1s0"]
-      }
-    ],
-
-    /// Policies assign rules to the subjects.
-    "policies": [
-      {
-        "id": "allow_list_wifi",
-        "rules": ["allow_list", "allow_tf_ingress", "allow_tf_egress"],
-        "subjects": ["wifi_interfaces"]
-      },
-      {
-        "id": "allow_all_local",
-        "rules": ["allow_all"],
-        "subjects" : ["local_loopback"]
-      }
-    ]
-  },
+  // access_control: {
+  //   /// [true/false] acl will be activated only if this is set to true
+  //   "enabled": false,
+  //   /// [deny/allow] default permission is deny (even if this is left empty or not specified)
+  //   "default_permission": "deny",
+  //   /// Rule set for permissions allowing or denying access to key-expressions
+  //   "rules":
+  //   [
+  //     {
+  //       /// Id has to be unique within the rule set
+  //       "id": "rule1",
+  //       "messages": [
+  //         "put", "delete", "declare_subscriber",
+  //         "query", "reply", "declare_queryable",
+  //         "liveliness_token", "liveliness_query", "declare_liveliness_subscriber",
+  //       ],
+  //       "flows":["egress","ingress"],
+  //       "permission": "allow",
+  //       "key_exprs": [
+  //         "test/demo"
+  //       ],
+  //     },
+  //     {
+  //       "id": "rule2",
+  //       "messages": [
+  //         "put", "delete", "declare_subscriber",
+  //         "query", "reply", "declare_queryable",
+  //       ],
+  //       "flows":["ingress"],
+  //       "permission": "allow",
+  //       "key_exprs": [
+  //         "**"
+  //       ],
+  //     },
+  //   ],
+  //   /// List of combinations of subjects.
+  //   ///
+  //   /// If a subject property (i.e. username, certificate common name or interface) is empty
+  //   /// it is interpreted as a wildcard. Moreover, a subject property cannot be an empty list.
+  //   "subjects":
+  //   [
+  //     {
+  //       /// Id has to be unique within the subjects list
+  //       "id": "subject1",
+  //       /// Subjects can be interfaces
+  //       "interfaces": [
+  //         "lo0",
+  //         "en0",
+  //       ],
+  //       /// Subjects can be cert_common_names when using TLS or Quic
+  //       "cert_common_names": [
+  //         "example.zenoh.io"
+  //       ],
+  //       /// Subjects can be usernames when using user/password authentication
+  //       "usernames": [
+  //         "zenoh-example"
+  //       ],
+  //       /// This instance translates internally to this filter:
+  //       /// (interface="lo0" && cert_common_name="example.zenoh.io" && username="zenoh-example") ||
+  //       /// (interface="en0" && cert_common_name="example.zenoh.io" && username="zenoh-example")
+  //     },
+  //     {
+  //       "id": "subject2",
+  //       "interfaces": [
+  //         "lo0",
+  //         "en0",
+  //       ],
+  //       "cert_common_names": [
+  //         "example2.zenoh.io"
+  //       ],
+  //       /// This instance translates internally to this filter:
+  //       /// (interface="lo0" && cert_common_name="example2.zenoh.io") ||
+  //       /// (interface="en0" && cert_common_name="example2.zenoh.io")
+  //     },
+  //     {
+  //       "id": "subject3",
+  //       /// An empty subject combination is a wildcard
+  //     },
+  //     {
+  //       "id": "subject4",
+  //       /// link protocols can also be used to identify transports to filter messages on.
+  //       /// If absent, the rules will be applied to all transports. An empty list is invalid.
+  //       link_protocols: [ "tcp", "udp", "tls", "quic", "ws", "serial", "unixsock-stream", "unixpipe", "vsock"],
+  //       /// ZIDs can also be used to identify transports to filter messages on.
+  //       /// NOTE: ZID is not backed by an authentication mechanism, it can only be trusted for ACL if it is
+  //       ///       dynamically added/removed by eventual dedicated Zenoh mechanisms when transports are opened/closed.
+  //       ///       If managed manually in ACL config, can be useful for prototyping but should not be used in production!
+  //       zids: ["38a4829bce9166ee"],
+  //     },
+  //   ],
+  //   /// The policies list associates rules to subjects
+  //   "policies":
+  //   [
+  //     /// Each policy associates one or multiple rules to one or multiple subject combinations
+  //     {
+  //       /// Id is optional. If provided, it has to be unique within the policies list
+  //       "id": "policy1",
+  //       /// Rules and Subjects are identified with their unique IDs declared above
+  //       "rules": ["rule1"],
+  //       "subjects": ["subject1", "subject2"],
+  //     },
+  //     {
+  //       "rules": ["rule2"],
+  //       "subjects": ["subject3", "subject4"],
+  //     },
+  //   ]
+  // },
 
   // low_pass_filter: [
   //   {
