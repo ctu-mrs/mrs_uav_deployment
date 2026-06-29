@@ -5,8 +5,8 @@ mrs_uav_managers:
     units: "LATLON" # {"UTM, "LATLON"}
 
     # rough center of the property
-    origin_x: 50.183791
-    origin_y: 14.164355
+    origin_x: 50.184038 
+    origin_y: 14.165278
 
   safety_area_manager:
     safety_area:
