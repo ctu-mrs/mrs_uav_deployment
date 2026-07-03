@@ -5,8 +5,8 @@ mrs_uav_managers:
     units: "LATLON" # {"UTM, "LATLON"}
 
     # rough center of the property
-    origin_x: 50.184038 
-    origin_y: 14.165278
+    origin_x: 50.1836070 
+    origin_y: 14.1642374
 
   safety_area_manager:
     safety_area:
@@ -23,10 +23,10 @@ mrs_uav_managers:
         # x, y [m] for any frame_name except latlon_origin
         # x = latitude, y = longitude [deg]  for frame_name=="latlon_origin"
         points: [
-          50.184138, 14.165078, # NW
-          50.183289, 14.164234, # SW
-          50.183342, 14.164582, # SE
-          50.184226, 14.165390, # NE
+          50.1840875, 14.1636618, # NW
+          50.1821330, 14.1637379, # SW
+          50.1821969, 14.1651155, # SE
+          50.1843320, 14.1646477, # NE
         ]
 
       vertical:
