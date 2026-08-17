@@ -1,0 +1,31 @@
+launch:
+  - node:
+      pkg: "tf2_ros"
+      exec: "static_transform_publisher"
+      name: "fcu_to_garmin"
+      namespace: "$(env UAV_NAME)" 
+      output: "screen"
+      args: >
+        --x 0.0
+        --y -0.068
+        --z -0.0101
+        --yaw 0.0
+        --pitch 1.5708
+        --roll 0.0
+        --frame-id $(env UAV_NAME uav1)/fcu
+        --child-frame-id $(env UAV_NAME uav1)/garmin
+  - node:
+      pkg: "tf2_ros"
+      exec: "static_transform_publisher"
+      name: "fcu_to_rtk_antenna"
+      namespace: "$(env UAV_NAME)" 
+      output: "screen"
+      args: >
+        --x 0.0
+        --y 0.0
+        --z 0.1
+        --yaw 0.0
+        --pitch 0.0
+        --roll 0.0
+        --frame-id $(env UAV_NAME uav1)/fcu
+        --child-frame-id $(env UAV_NAME uav1)/rtk_antenna
