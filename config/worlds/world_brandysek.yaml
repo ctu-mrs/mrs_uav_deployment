@@ -35,3 +35,6 @@ mrs_uav_managers:
         max_z: 35.0
         min_z: 1.0
 
+      obstacles:
+
+        present: false
