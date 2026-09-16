@@ -1,0 +1,28 @@
+_livox_back:
+  translation: [-0.0262, 0.0629, -0.1157]
+  rotation_euler_xyz_deg: [150.0, 0.0, -90.0]
+  rotation_euler_xyz_rad: [2.618, 0.0, -1.5708]
+_oudin:
+  translation: [0.2087, -0.04, -0.1271]
+  rotation_euler_xyz_deg: [-115.0, 0.0, -90.0]
+  rotation_euler_xyz_rad: [-2.0071, 0.0, -1.5708]
+_livox_front:
+  translation: [0.2047, 0.0628, -0.1157]
+  rotation_euler_xyz_deg: [150.0, 0.0, 90.0]
+  rotation_euler_xyz_rad: [2.618, 0.0, 1.5708]
+_rpi_cam_front_right:
+  translation: [0.3099, -0.0224, -0.0097]
+  rotation_euler_xyz_deg: [-110.2323, -8.5111, -111.8776]
+  rotation_euler_xyz_rad: [-1.9239, -0.1485, -1.9526]
+_rpi_cam_rear_right:
+  translation: [-0.1314, -0.0224, -0.0097]
+  rotation_euler_xyz_deg: [-110.2324, 8.5109, 111.8777]
+  rotation_euler_xyz_rad: [-1.9239, 0.1485, 1.9526]
+_rpi_cam_rear_left:
+  translation: [-0.1314, 0.0224, -0.0097]
+  rotation_euler_xyz_deg: [-110.2324, -8.5109, 68.1223]
+  rotation_euler_xyz_rad: [-1.9239, -0.1485, 1.189]
+_rpi_cam_front_left:
+  translation: [0.3099, 0.0224, -0.0097]
+  rotation_euler_xyz_deg: [-110.2323, 8.5108, -68.1222]
+  rotation_euler_xyz_rad: [-1.9239, 0.1485, -1.189]
