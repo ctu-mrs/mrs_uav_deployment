@@ -32,12 +32,16 @@ ONSHAPE_SECRET_KEY=your_secret_key
 ```
 
 Generate API keys from your Onshape account under
+
+**My Accoutn (right top corner when you press on your profile) -> Develover -> API Keys**
+
 **Developer Portal → API Keys**.
+
 
 ## 3. Usage
 
 ```bash
-python onshapeTFs2yaml.py --cad-url <onshape-assembly-url> [--plot] [--output tf.yaml]
+python onshape2yaml.py --cad-url <onshape-assembly-url> --plot --output <output.yaml>
 ```
 
 ### Arguments
@@ -45,7 +49,7 @@ python onshapeTFs2yaml.py --cad-url <onshape-assembly-url> [--plot] [--output tf
 | Flag         | Default                                                   | Description                                              |
 |--------------|------------------------------------------------------------|------------------------------------------------------------|
 | `--cad-url`  | (example assembly URL baked into the script)               | Onshape assembly document URL to analyze.                  |
-| `--plot`     | off                                                         | Show an interactive 3D matplotlib visualization of frames. |
+| `--plot`     | off                                                         | When set, the 3D plot will be displayed. When ommited no plot will be shown. |
 | `--output`   | `tf.yaml`                                                   | Path to write the resulting transforms as YAML.             |
 
 ### Examples
@@ -53,19 +57,19 @@ python onshapeTFs2yaml.py --cad-url <onshape-assembly-url> [--plot] [--output tf
 Run with default assembly URL, no visualization:
 
 ```bash
-python onshapeTFs2yaml.py
+python onshape2yaml.py
 ```
 
 Run against a specific assembly and show the 3D plot:
 
 ```bash
-python onshapeTFs2yaml.py --cad-url "https://cad.onshape.com/documents/<did>/w/<wid>/e/<eid>" --plot
+python onshape2yaml.py --cad-url "https://cad.onshape.com/documents/<did>/w/<wid>/e/<eid>" --plot
 ```
 
 Save results to a custom file:
 
 ```bash
-python onshapeTFs2yaml.py --output my_transforms.yaml
+python onshape2yaml.py --output my_transforms.yaml
 ```
 
 ## 4. How it works

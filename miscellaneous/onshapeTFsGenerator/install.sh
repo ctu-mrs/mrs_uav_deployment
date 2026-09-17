@@ -2,6 +2,17 @@
 # Creates a virtual environment and installs all required dependencies
 # for running onshapeTFs2yaml.py
 
+
+# create a .evn template 
+cat > .env <<'EOF'
+# Obtained at https://dev-portal.onshape.com/keys
+export ONSHAPE_API=https://cad.onshape.com
+export ONSHAPE_ACCESS_KEY=Pasteyourkey
+export ONSHAPE_SECRET_KEY=Pasteyourkey
+EOF
+
+echo ".env created"
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
