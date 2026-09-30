@@ -1,4 +1,4 @@
-mavlink start -d /dev/ttyS2 -b 921600
+mavlink start -d /dev/ttyS2 -b 921600 -r 80000
 mavlink stream -d /dev/ttyS2 -s ATTITUDE -r 100
 mavlink stream -d /dev/ttyS2 -s ATTITUDE_TARGET -r 100
 mavlink stream -d /dev/ttyS2 -s BATTERY_STATUS -r 1
