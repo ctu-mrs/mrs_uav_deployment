@@ -50,7 +50,7 @@ input=(
 '
   'kernel_log' 'tail -f /var/log/kern.log -n 100
 '
-  'zenoh' './zenoh_router.sh
+  'zenoh' 'ros2 run rmw_zenoh_cpp rmw_zenohd
 '
 )
 
@@ -136,9 +136,7 @@ done
 # send commands
 for ((i=0; i < ${#cmds[*]}; i++));
 do
-  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;
-${pre_input};
-${cmds[$i]}"
+  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;^M${pre_input};^M${cmds[$i]}"
 done
 
 # identify the index of the init window
