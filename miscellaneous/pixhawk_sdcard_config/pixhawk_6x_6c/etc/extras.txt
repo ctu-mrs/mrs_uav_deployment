@@ -4,6 +4,7 @@ mavlink stream -d /dev/ttyS1 -s ATTITUDE -r 100
 mavlink stream -d /dev/ttyS1 -s ATTITUDE_TARGET -r 100
 mavlink stream -d /dev/ttyS1 -s BATTERY_STATUS -r 1
 mavlink stream -d /dev/ttyS1 -s DISTANCE_SENSOR -r 100
+mavlink stream -d /dev/ttyS1 -s EXTENDED_SYS_STATE -r 100
 mavlink stream -d /dev/ttyS1 -s GLOBAL_POSITION_INT -r 100
 mavlink stream -d /dev/ttyS1 -s HEARTBEAT -r 100
 mavlink stream -d /dev/ttyS1 -s HIGHRES_IMU -r 100
