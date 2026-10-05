@@ -31,16 +31,53 @@ def get_mat4_from_mate_connector(mate_connector):# # #{
 
 # # #}
 
-def get_tf_from_mat4(transform4x4):# # #{
-    """Convert a 4x4 transformation matrix to translation and Euler angles."""
+def _format_vector(values, decimals=4):
+    """Return a compact, readable vector string."""
+    return "[" + ", ".join(f"{float(v):>{decimals + 5}.{decimals}f}" for v in values) + "]"
+
+
+def _format_angles_deg(values):
+    """Return a compact, readable degree-angle string."""
+    return "[" + ", ".join(f"{float(v):>7.2f}°" for v in values) + "]"
+
+
+def _format_angles_rad(values):
+    """Return a compact, readable radian-angle string."""
+    return "[" + ", ".join(f"{float(v):>7.4f} rad" for v in values) + "]"
+
+
+def get_tf_from_mat4(transform4x4, *, frame_name="transform", reference_frame="world"):
+    """Convert a 4x4 transform matrix to translation and Euler angles,
+    and print a clean, human-friendly summary of both forward and inverse poses.
+    """
+    np.set_printoptions(precision=4, suppress=True)
+
     translation = transform4x4[:3, 3]
     rotation = Rotation.from_matrix(transform4x4[:3, :3])
     euler_xyz_rad = rotation.as_euler("xyz", degrees=False)
     euler_xyz_deg = rotation.as_euler("xyz", degrees=True)
 
-    print("    Translation (x, y, z):", translation)
-    print("    Euler angles XYZ (radians):", euler_xyz_rad)
-    print("    Euler angles XYZ (degrees):", euler_xyz_deg)
+    inv_transform4x4 = np.linalg.inv(transform4x4)
+    inv_translation = inv_transform4x4[:3, 3]
+    inv_rotation = Rotation.from_matrix(inv_transform4x4[:3, :3])
+    inv_euler_xyz_rad = inv_rotation.as_euler("xyz", degrees=False)
+    inv_euler_xyz_deg = inv_rotation.as_euler("xyz", degrees=True)
+
+    print("=" * 88)
+    print(f" Transforamation {frame_name} -> {reference_frame} ".center(88, "="))
+    print("=" * 88)
+    print(f"  Matrix:\n{transform4x4}")
+    print(f"  Translation (x, y, z): {_format_vector(translation)}")
+    print(f"  Rotation (XYZ, deg):   {_format_angles_deg(euler_xyz_deg)}")
+    print(f"  Rotation (XYZ, rad):   {_format_angles_rad(euler_xyz_rad)}")
+
+    print(f" Transforamation {reference_frame} -> {frame_name} ".center(88, "="))
+    print(f"  Matrix:\n{inv_transform4x4}")
+    print(f"  Translation (x, y, z): {_format_vector(inv_translation)}")
+    print(f"  Rotation (XYZ, deg):   {_format_angles_deg(inv_euler_xyz_deg)}")
+    print(f"  Rotation (XYZ, rad):   {_format_angles_rad(inv_euler_xyz_rad)}")
+    print("=" * 88)
+    print("\n" * 3)
 
     return translation, euler_xyz_deg, euler_xyz_rad
 
@@ -153,17 +190,17 @@ if __name__ == "__main__":
     for mate in mates:
         if mate.name == fcu_name:
             continue
-
-        print()
-        print(f"Mate Connector: {mate.name}")
-        print(f"  TF in {fcu_name} frame:")
-
+        
         world_to_mate_mat4= get_mat4_from_mate_connector(mate)
         
         # compute the transformation from the FCU frame to the mate connector's frame
         fcu_to_mate_mat4 = np.linalg.inv(world_to_fcu) @ world_to_mate_mat4
 
-        translation, rot_euler, rot_rad = get_tf_from_mat4(fcu_to_mate_mat4)
+        translation, rot_euler, rot_rad = get_tf_from_mat4(
+            fcu_to_mate_mat4,
+            frame_name=mate.name,
+            reference_frame=fcu_name,
+        )
 
         tf_data[mate.name] = {
             "translation": round_list(translation.tolist()),
