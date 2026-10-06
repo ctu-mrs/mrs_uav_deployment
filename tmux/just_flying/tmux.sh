@@ -136,7 +136,7 @@ done
 # send commands
 for ((i=0; i < ${#cmds[*]}; i++));
 do
-  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;^M${pre_input};^M${cmds[$i]}"
+  $TMUX_BIN send-keys -t $SESSION_NAME:$(($i+1)) "cd $SCRIPTPATH;"$'\r'"${pre_input};"$'\r'"${cmds[$i]}"
 done
 
 # identify the index of the init window
