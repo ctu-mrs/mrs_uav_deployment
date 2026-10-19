@@ -3,7 +3,7 @@
 # for running onshapeTFs2yaml.py
 
 
-# create a .evn template 
+# create a .env template 
 cat > .env <<'EOF'
 # Obtained at https://dev-portal.onshape.com/keys
 export ONSHAPE_API=https://cad.onshape.com

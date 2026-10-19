@@ -46,7 +46,7 @@ def _format_angles_rad(values):
     return "[" + ", ".join(f"{float(v):>7.4f} rad" for v in values) + "]"
 
 
-def get_tf_from_mat4(transform4x4, *, frame_name="transform", reference_frame="world"):
+def get_tf_from_mat4(transform4x4, *, frame_name="transform", reference_frame="world", print_out=False):
     """Convert a 4x4 transform matrix to translation and Euler angles,
     and print a clean, human-friendly summary of both forward and inverse poses.
     """
@@ -63,21 +63,22 @@ def get_tf_from_mat4(transform4x4, *, frame_name="transform", reference_frame="w
     inv_euler_xyz_rad = inv_rotation.as_euler("xyz", degrees=False)
     inv_euler_xyz_deg = inv_rotation.as_euler("xyz", degrees=True)
 
-    print("=" * 88)
-    print(f" Transforamation {frame_name} -> {reference_frame} ".center(88, "="))
-    print("=" * 88)
-    print(f"  Matrix:\n{transform4x4}")
-    print(f"  Translation (x, y, z): {_format_vector(translation)}")
-    print(f"  Rotation (XYZ, deg):   {_format_angles_deg(euler_xyz_deg)}")
-    print(f"  Rotation (XYZ, rad):   {_format_angles_rad(euler_xyz_rad)}")
+    if print_out:
+        print("=" * 88)
+        print(f" Transforamation {frame_name} -> {reference_frame} ".center(88, "="))
+        print("=" * 88)
+        print(f"  Matrix:\n{transform4x4}")
+        print(f"  Translation (x, y, z): {_format_vector(translation)}")
+        print(f"  Rotation (XYZ, deg):   {_format_angles_deg(euler_xyz_deg)}")
+        print(f"  Rotation (XYZ, rad):   {_format_angles_rad(euler_xyz_rad)}")
 
-    print(f" Transforamation {reference_frame} -> {frame_name} ".center(88, "="))
-    print(f"  Matrix:\n{inv_transform4x4}")
-    print(f"  Translation (x, y, z): {_format_vector(inv_translation)}")
-    print(f"  Rotation (XYZ, deg):   {_format_angles_deg(inv_euler_xyz_deg)}")
-    print(f"  Rotation (XYZ, rad):   {_format_angles_rad(inv_euler_xyz_rad)}")
-    print("=" * 88)
-    print("\n" * 3)
+        print(f" Transforamation {reference_frame} -> {frame_name} ".center(88, "="))
+        print(f"  Matrix:\n{inv_transform4x4}")
+        print(f"  Translation (x, y, z): {_format_vector(inv_translation)}")
+        print(f"  Rotation (XYZ, deg):   {_format_angles_deg(inv_euler_xyz_deg)}")
+        print(f"  Rotation (XYZ, rad):   {_format_angles_rad(inv_euler_xyz_rad)}")
+        print("=" * 88)
+        print("\n" * 3)
 
     return translation, euler_xyz_deg, euler_xyz_rad
 
@@ -152,7 +153,11 @@ class CompactDumper(yaml.Dumper):# # #{
     while keeping dicts in block style."""
 
     def represent_sequence(self, tag, sequence, flow_style=None):
-        return super().represent_sequence(tag, sequence, flow_style=True)
+        is_nested_sequence = bool(sequence) and isinstance(sequence[0], (list, tuple))
+        return super().represent_sequence(tag, sequence, flow_style=not is_nested_sequence)
+
+    def increase_indent(self, flow=False, indentless=False):
+        return super().increase_indent(flow, False)
 # # #}
 
 if __name__ == "__main__":
@@ -195,17 +200,30 @@ if __name__ == "__main__":
         
         # compute the transformation from the FCU frame to the mate connector's frame
         fcu_to_mate_mat4 = np.linalg.inv(world_to_fcu) @ world_to_mate_mat4
+        mate_to_fcu_mat4 = np.linalg.inv(fcu_to_mate_mat4)
 
         translation, rot_euler, rot_rad = get_tf_from_mat4(
             fcu_to_mate_mat4,
             frame_name=mate.name,
             reference_frame=fcu_name,
+            print_out=True
+        )
+
+        t,r_euler,r_rad = get_tf_from_mat4(
+            mate_to_fcu_mat4,
+            frame_name=fcu_name,
+            reference_frame=mate.name,
         )
 
         tf_data[mate.name] = {
+            f"{mate.name[1:]}_to_fcu_mat4": [round_list(row) for row in fcu_to_mate_mat4.tolist()],
             "translation": round_list(translation.tolist()),
             "rotation_euler_xyz_deg": round_list(rot_euler.tolist()),
             "rotation_euler_xyz_rad": round_list(rot_rad.tolist()),
+            f"fcu_to{mate.name}_mat4": [round_list(row) for row in mate_to_fcu_mat4.tolist()],
+            "translation_inv": round_list(t.tolist()),
+            "rotation_inv_euler_xyz_deg_inv": round_list(r_euler.tolist()),
+            "rotation_inv_euler_xyz_rad_inv": round_list(r_rad.tolist()),
         }
 
         if args.plot:
