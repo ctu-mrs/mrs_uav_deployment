@@ -28,6 +28,8 @@ SESSION_NAME=mav
 # following commands will be executed first in each window
 # * do NOT put ; at the end
 pre_input="export RMW_IMPLEMENTATION=rmw_zenoh_cpp"
+pre_input+="; export CUSTOM_CONFIG=./config/custom_config.yaml"
+pre_input+="; export NETWORK_CONFIG=./config/network_config.yaml"
 
 # define commands
 # 'name' 'command'
@@ -37,11 +39,11 @@ pre_input="export RMW_IMPLEMENTATION=rmw_zenoh_cpp"
 input=(
   'Rosbag' 'waitForOffboard; ./record.sh
 '
-  'HwApi' 'ros2 launch mrs_uav_px4_api api.launch.py
+  'HwApi' 'ros2 launch mrs_uav_px4_api api.launch.py platform_config:=`ros2 pkg prefix mrs_uav_deployment --share`/config/mrs_uav_system/$UAV_TYPE.yaml custom_config:=$CUSTOM_CONFIG
 '
   'Status' 'ros2 run mrs_uav_status status.sh
 '
-  'Core' 'ros2 launch mrs_uav_core core.launch.py platform_config:=`ros2 pkg prefix mrs_uav_deployment --share`/config/mrs_uav_system/$UAV_TYPE.yaml world_config:=`ros2 pkg prefix mrs_uav_deployment --share`/config/worlds/world_$WORLD_NAME.yaml custom_config:=./config/custom_config.yaml network_config:=./config/network_config.yaml
+  'Core' 'ros2 launch mrs_uav_core core.launch.py platform_config:=`ros2 pkg prefix mrs_uav_deployment --share`/config/mrs_uav_system/$UAV_TYPE.yaml world_config:=`ros2 pkg prefix mrs_uav_deployment --share`/config/worlds/world_$WORLD_NAME.yaml custom_config:=$CUSTOM_CONFIG network_config:=$NETWORK_CONFIG
 '
   'AutoStart' 'ros2 launch mrs_uav_autostart automatic_start.launch.py
 '
