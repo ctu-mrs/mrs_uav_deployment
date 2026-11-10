@@ -232,6 +232,13 @@ mrs_uav_managers:
     min_height_checking:
       enabled: false # needs AGL height, RoboFly has no rangefinder
 
+  diagnostics_manager:
+    sensor_handlers:
+      active_sensor_handlers: ["PX4", "GNSS", "Magnetometer", "RemoteController"] # the defaults without the Rangefinder
+    preflight_check:
+      height_check:
+        enabled: false # no rangefinder
+
 mrs_uav_trackers:
   landoff_tracker:
     max_position_difference: 2.0 # [m]
