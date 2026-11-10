@@ -196,6 +196,10 @@ mrs_uav_managers:
       eland_threshold: 2.5 # [m] position error triggering eland
       failsafe_threshold: 3.5 # [m] position error triggering failsafe landing
 
+    MpcController:
+      eland_threshold: 2.5 # [m] position error triggering eland
+      failsafe_threshold: 3.5 # [m] position error triggering failsafe landing
+
     rc_joystick:
       horizontal_speed: 3.0 # [m/s]
       vertical_speed: 2.0 # [m/s]
