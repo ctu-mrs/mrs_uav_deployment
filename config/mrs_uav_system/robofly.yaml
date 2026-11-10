@@ -202,13 +202,11 @@ mrs_uav_managers:
       heading_rate: 2.0 # [rad/s]
 
     safety:
-      # eland, failsafe and disarm (incl. the tilt/yaw safety checks) only switch off the
-      # MRS output and hand control to the safety pilot -> a pilot must always be ready
       rc_emergency_handoff:
-        enabled: false
+        enabled: false # MRS lands or disarms by itself, no handoff to the RC
 
       eland:
-        # only used with rc_emergency_handoff disabled; more aggressive than upstream (0.5 / 2.0 s)
+        # RoboFly tuning (upstream 0.5 / 2.0 s)
         cutoff_mass_factor: 0.75
         cutoff_timeout: 0.5 # [s]
 
