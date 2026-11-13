@@ -1,6 +1,6 @@
 mavlink start -d /dev/ttyS1 -b 2000000
 
-mavlink stream -d /dev/ttyS1 -s ATTITUDE -r 100
+mavlink stream -d /dev/ttyS1 -s ATTITUDE_QUATERNION -r 100
 mavlink stream -d /dev/ttyS1 -s ATTITUDE_TARGET -r 100
 mavlink stream -d /dev/ttyS1 -s BATTERY_STATUS -r 1
 mavlink stream -d /dev/ttyS1 -s DISTANCE_SENSOR -r 100
