@@ -1,16 +1,18 @@
+# Platform config of the RoboFly: its motors, and its settings with the gps_baro and open_vins state estimators
+
 motor_params:
   n_motors: 4
   a: 0.2882
   b: -0.0895
 
-# If it is read by `hw_api`, disables the RangeFinder
+# read only by the hw_api of the newer images, not by the stable ones
 mrs_uav_hw_api:
   outputs:
     distance_sensor: false # the RoboFly has no rangefinder
 
 mrs_uav_managers:
   estimation_manager:
-    # Default state estimator `gps_baro`; the custom config of each session selects its own (outdoor.yaml, indoor.yaml, etc.)
+    # default state estimator; the custom config of each session selects its own (outdoor.yaml, indoor.yaml)
     state_estimators: ["gps_baro"]
     initial_state_estimator: "gps_baro"
     agl_height_estimator: "" # no rangefinder -> no AGL height
@@ -18,7 +20,7 @@ mrs_uav_managers:
     open_vins:
       address: "mrs_open_vins_estimator_plugin::OpenVins"
 
-      requires: # data required from the HW API
+      requires: # data required from the hw_api
         gnss: false
         imu: false
         distance_sensor: false
@@ -40,34 +42,33 @@ mrs_uav_managers:
           name: "alt_open_vins"
         heading:
           name: "hdg_open_vins"
-          passthrough: false # heading is estimated from VIO, not taken from hw_api/orientation
+          passthrough: false # the heading is estimated from OpenVINS, not taken from hw_api/orientation
 
       topics:
         orientation: "hw_api/orientation"
         angular_velocity: "hw_api/angular_velocity"
 
-      lat_open_vins:
-        hdg_source_topic: "open_vins/hdg_open_vins/output" # <state_estimator>/<heading_estimator>/output
+      alt_open_vins:
         max_flight_z: 100.0 # [m]
 
         innovation:
           limit: 1.0 # [m]
-          action: "eland" # {"eland", "switch", "mitigate", "none"}
+          action: "switch" # {"eland", "switch", "mitigate"}
 
-        repredictor: # VIO odometry arrives with a delay
+        repredictor:
           enabled: true
-          buffer_size: 200 # [samples] ~2 s of history at 100 Hz
+          buffer_size: 200 # [samples]
 
         process_noise:
-          pos: 0.1
-          vel: 1.0
-          acc: 1.0
+          pos: 1.0
+          vel: 100.0
+          acc: 100.0
 
         corrections: ["pos_vio", "vel_vio"]
 
         pos_vio:
-          state_id: 0 # 0 = position, 1 = velocity, 2 = acceleration
-          noise: 0.01
+          state_id: 0 # 0 - position, 1 - velocity, 2 - acceleration
+          noise: 0.001
           noise_unhealthy_coeff: 100.0
           message:
             type: "nav_msgs/Odometry"
@@ -81,9 +82,9 @@ mrs_uav_managers:
 
         vel_vio:
           state_id: 1
-          noise: 0.01
+          noise: 0.1
           noise_unhealthy_coeff: 100.0
-          body_frame: true # OpenVINS twist is in the body frame
+          body_frame: true # the velocity of OpenVINS is in the body frame
           message:
             type: "nav_msgs/Odometry"
             topic: "vins_republisher/odom"
@@ -91,59 +92,15 @@ mrs_uav_managers:
               delay: 1.0 # [s]
               time_since_last: 0.5 # [s]
           processors: []
-          transform:
-            enabled: false
-
-      alt_open_vins:
-        max_flight_z: 100.0 # [m]
-
-        innovation:
-          limit: 1.0 # [m]
-          action: "switch" # on a VIO height jump fall back to another estimator instead of eland
-
-        repredictor:
-          enabled: true
-          buffer_size: 200 # [samples]
-
-        process_noise:
-          pos: 1.0
-          vel: 100.0
-          acc: 100.0
-
-        corrections: ["pos_vio", "vel_hw_api"]
-
-        pos_vio:
-          state_id: 0
-          noise: 0.001 # VIO height dominates the estimate
-          noise_unhealthy_coeff: 100.0
-          message:
-            type: "nav_msgs/Odometry"
-            topic: "vins_republisher/odom"
-            limit:
-              delay: 1.0 # [s]
-              time_since_last: 0.5 # [s]
-          processors: []
-          transform:
-            enabled: false
-
-        vel_hw_api:
-          state_id: 1
-          noise: 1.0 # only weak aiding from the FCU velocity
-          noise_unhealthy_coeff: 100.0
-          body_frame: true # hw_api/velocity is in the body frame (as in upstream gps_baro/alt_baro)
-          message:
-            type: "geometry_msgs/Vector3Stamped"
-            topic: "hw_api/velocity"
-            limit:
-              delay: 1.0 # [s]
-              time_since_last: 0.5 # [s]
-          processors: []
+          median_filter:
+            buffer_size: 20 # [samples]
+            max_diff: 2.0 # [m/s]
           transform:
             enabled: false
 
       hdg_open_vins:
         max_flight_z: 100.0 # [m]
-        position_innovation_limit: 1.0 # [rad] exceeding it puts the estimator into error (-> switch/eland)
+        position_innovation_limit: 1.0 # [rad]
 
         repredictor:
           enabled: true
@@ -168,88 +125,118 @@ mrs_uav_managers:
           processors: []
           transform:
             enabled: false
+          init_hdg_in_zero: false
 
+      lat_open_vins:
+        hdg_source_topic: "open_vins/hdg_open_vins/output" # required, but not used by this version of MRS
+        max_flight_z: 100.0 # [m]
+
+        innovation:
+          limit: 1.0 # [m]
+          action: "eland" # {"eland", "switch", "mitigate"}
+
+        repredictor:
+          enabled: true
+          buffer_size: 200 # [samples]
+
+        process_noise:
+          pos: 0.1
+          vel: 1.0
+          acc: 1.0
+
+        corrections: ["pos_vio", "vel_vio"]
+
+        pos_vio:
+          state_id: 0
+          noise: 0.01
+          noise_unhealthy_coeff: 100.0
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+
+        vel_vio:
+          state_id: 1
+          noise: 0.1
+          noise_unhealthy_coeff: 100.0
+          body_frame: true # the velocity of OpenVINS is in the body frame
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+
+  # the lists of estimator_types replace the defaults: they must contain every estimator that can be active
   constraint_manager:
     estimator_types: ["gps_baro", "open_vins"]
+    constraints: ["slow", "medium", "fast"]
     allowed_constraints:
+      gps_baro: ["slow", "medium", "fast"]
       open_vins: ["slow", "medium", "fast"]
     default_constraints:
-      gps_baro: "medium"
+      gps_baro: "slow"
       open_vins: "slow"
 
   gain_manager:
     estimator_types: ["gps_baro", "open_vins"]
+    gains: ["supersoft"]
     allowed_gains:
-      open_vins: ["supersoft", "soft"]
+      gps_baro: ["supersoft"]
+      open_vins: ["supersoft"]
     default_gains:
       gps_baro: "supersoft"
       open_vins: "supersoft"
-    supersoft:
-      mass_estimator:
-        km: 0.05 # [kg/s] mass estimator max rate
-    soft:
-      mass_estimator:
-        km: 0.05 # [kg/s] mass estimator max rate
-
   control_manager:
-    Se3Controller:
-      eland_threshold: 2.5 # [m] position error triggering eland
-      failsafe_threshold: 3.5 # [m] position error triggering failsafe landing
-
-    MpcController:
-      eland_threshold: 2.5 # [m] position error triggering eland
-      failsafe_threshold: 3.5 # [m] position error triggering failsafe landing
-
-    rc_joystick:
-      horizontal_speed: 3.0 # [m/s]
-      vertical_speed: 2.0 # [m/s]
-      heading_rate: 2.0 # [rad/s]
-
     safety:
+      odometry_max_missing_time: 1.0 # [s]
       rc_emergency_handoff:
-        enabled: false # MRS lands or disarms by itself, no handoff to the RC
-
-      eland:
-        # RoboFly tuning (upstream 0.5 / 2.0 s)
-        cutoff_mass_factor: 0.75
-        cutoff_timeout: 0.5 # [s]
+        enabled: false
 
   transform_manager:
-    open_vins: # TF source for open_vins (used only when it is in state_estimators)
+    open_vins: # TF of the open_vins state estimator (used only when it is in state_estimators)
       odom_topic: "odom"
       tf_from_attitude:
         enabled: true
         attitude_topic: "attitude"
       namespace: "estimation_manager/open_vins"
-      utm_based: false # VIO has no global reference
-      inverted: true # MRS inverted TF tree convention
+      utm_based: false # OpenVINS has no global reference
+      inverted: true # inverted TF tree of MRS
       republish_in_frames: []
-
+      custom_child_frame_id:
+        enabled: false
+      custom_frame_id:
+        enabled: false
   uav_manager:
-    landing:
-      # RoboFly tuning (upstream 0.5 / 2.0 s); both conditions must hold simultaneously
-      landing_cutoff_mass_factor: 0.75
-      landing_cutoff_timeout: 0.5 # [s]
+    takeoff:
+      takeoff_height: 1.2 # [m]
+      during_takeoff:
+        controller: "Se3Controller"
+      after_takeoff:
+        controller: "Se3Controller"
 
+    # both need the AGL height, and the RoboFly has no rangefinder
     min_height_checking:
-      enabled: false # needs AGL height, RoboFly has no rangefinder
+      enabled: false
+    max_height_checking:
+      enabled: false
 
   diagnostics_manager:
     sensor_handlers:
-      active_sensor_handlers: ["PX4", "GNSS", "Magnetometer", "RemoteController"] # the defaults without the Rangefinder
+      active_sensor_handlers: [
+          "PX4",
+          "GNSS",
+          "Magnetometer",
+          "RemoteController",
+        ] # the defaults without the Rangefinder
     preflight_check:
       height_check:
         enabled: false # no rangefinder
-
-mrs_uav_trackers:
-  landoff_tracker:
-    max_position_difference: 2.0 # [m]
-    vertical_tracker:
-      takeoff_speed: 1.0 # [m/s]
-      takeoff_acceleration: 0.5 # [m/s^2]
-
-mrs_uav_controllers:
-  mpc_controller:
-    so3:
-      mass_estimator:
-        km: 0.05 # [kg/s] mass estimator max rate
