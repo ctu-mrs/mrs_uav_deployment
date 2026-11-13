@@ -14,5 +14,3 @@ mavlink stream -d /dev/ttyS1 -s LOCAL_POSITION_NED -r 100
 mavlink stream -d /dev/ttyS1 -s ODOMETRY -r 100
 mavlink stream -d /dev/ttyS1 -s RC_CHANNELS -r 10
 mavlink stream -d /dev/ttyS1 -s SYS_STATUS -r 10
-
-usleep 100000
