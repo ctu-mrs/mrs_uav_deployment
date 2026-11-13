@@ -1,4 +1,5 @@
-mavlink start -d /dev/ttyS2 -b 2000000
+mavlink start -d /dev/ttyS2 -b 2000000 -m custom
+mavlink stream -d /dev/ttyS2 -s ALTITUDE -r 5
 mavlink stream -d /dev/ttyS2 -s ATTITUDE_QUATERNION -r 100
 mavlink stream -d /dev/ttyS2 -s ATTITUDE_TARGET -r 100
 mavlink stream -d /dev/ttyS2 -s BATTERY_STATUS -r 1
@@ -12,5 +13,4 @@ mavlink stream -d /dev/ttyS2 -s SYS_STATUS -r 10
 mavlink stream -d /dev/ttyS2 -s DISTANCE_SENSOR -r 100
 mavlink stream -d /dev/ttyS2 -s HEARTBEAT -r 100
 mavlink stream -d /dev/ttyS2 -s EXTENDED_SYS_STATE -r 100
-mavlink stream -d /dev/ttyS2 -s UTM_GLOBAL_POSITION -r 1
 usleep 100000

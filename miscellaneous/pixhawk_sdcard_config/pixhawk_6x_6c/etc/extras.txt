@@ -1,5 +1,6 @@
-mavlink start -d /dev/ttyS1 -b 2000000
+mavlink start -d /dev/ttyS1 -b 2000000 -m custom
 
+mavlink stream -d /dev/ttyS1 -s ALTITUDE -r 5
 mavlink stream -d /dev/ttyS1 -s ATTITUDE_QUATERNION -r 100
 mavlink stream -d /dev/ttyS1 -s ATTITUDE_TARGET -r 100
 mavlink stream -d /dev/ttyS1 -s BATTERY_STATUS -r 1
@@ -13,6 +14,5 @@ mavlink stream -d /dev/ttyS1 -s LOCAL_POSITION_NED -r 100
 mavlink stream -d /dev/ttyS1 -s ODOMETRY -r 100
 mavlink stream -d /dev/ttyS1 -s RC_CHANNELS -r 10
 mavlink stream -d /dev/ttyS1 -s SYS_STATUS -r 10
-mavlink stream -d /dev/ttyS1 -s UTM_GLOBAL_POSITION -r 1
 
 usleep 100000
