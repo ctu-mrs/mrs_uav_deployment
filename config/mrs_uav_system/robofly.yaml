@@ -1,0 +1,242 @@
+# Platform config of the RoboFly: its motors, and its settings with the gps_baro and open_vins state estimators
+
+motor_params:
+  n_motors: 4
+  a: 0.2882
+  b: -0.0895
+
+# read only by the hw_api of the newer images, not by the stable ones
+mrs_uav_hw_api:
+  outputs:
+    distance_sensor: false # the RoboFly has no rangefinder
+
+mrs_uav_managers:
+  estimation_manager:
+    # default state estimator; the custom config of each session selects its own (outdoor.yaml, indoor.yaml)
+    state_estimators: ["gps_baro"]
+    initial_state_estimator: "gps_baro"
+    agl_height_estimator: "" # no rangefinder -> no AGL height
+
+    open_vins:
+      address: "mrs_open_vins_estimator_plugin::OpenVins"
+
+      requires: # data required from the hw_api
+        gnss: false
+        imu: false
+        distance_sensor: false
+        altitude: false
+        magnetometer_heading: false
+        position: false
+        orientation: true
+        velocity: true
+        angular_velocity: true
+
+      override_frame_id:
+        enabled: true
+        frame_id: "vio_origin" # without the UAV namespace
+
+      estimators:
+        lateral:
+          name: "lat_open_vins"
+        altitude:
+          name: "alt_open_vins"
+        heading:
+          name: "hdg_open_vins"
+          passthrough: false # the heading is estimated from OpenVINS, not taken from hw_api/orientation
+
+      topics:
+        orientation: "hw_api/orientation"
+        angular_velocity: "hw_api/angular_velocity"
+
+      alt_open_vins:
+        max_flight_z: 100.0 # [m]
+
+        innovation:
+          limit: 1.0 # [m]
+          action: "switch" # {"eland", "switch", "mitigate"}
+
+        repredictor:
+          enabled: true
+          buffer_size: 200 # [samples]
+
+        process_noise:
+          pos: 1.0
+          vel: 100.0
+          acc: 100.0
+
+        corrections: ["pos_vio", "vel_vio"]
+
+        pos_vio:
+          state_id: 0 # 0 - position, 1 - velocity, 2 - acceleration
+          noise: 0.001
+          noise_unhealthy_coeff: 100.0
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+
+        vel_vio:
+          state_id: 1
+          noise: 0.1
+          noise_unhealthy_coeff: 100.0
+          body_frame: true # the velocity of OpenVINS is in the body frame
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          median_filter:
+            buffer_size: 20 # [samples]
+            max_diff: 2.0 # [m/s]
+          transform:
+            enabled: false
+
+      hdg_open_vins:
+        max_flight_z: 100.0 # [m]
+        position_innovation_limit: 1.0 # [rad]
+
+        repredictor:
+          enabled: true
+          buffer_size: 200 # [samples]
+
+        process_noise:
+          pos: 0.1
+          vel: 0.1
+
+        corrections: ["hdg_vio"]
+
+        hdg_vio:
+          state_id: 0
+          noise: 0.0001
+          noise_unhealthy_coeff: 100.0
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+          init_hdg_in_zero: false
+
+      lat_open_vins:
+        hdg_source_topic: "open_vins/hdg_open_vins/output" # required, but not used by this version of MRS
+        max_flight_z: 100.0 # [m]
+
+        innovation:
+          limit: 1.0 # [m]
+          action: "eland" # {"eland", "switch", "mitigate"}
+
+        repredictor:
+          enabled: true
+          buffer_size: 200 # [samples]
+
+        process_noise:
+          pos: 0.1
+          vel: 1.0
+          acc: 1.0
+
+        corrections: ["pos_vio", "vel_vio"]
+
+        pos_vio:
+          state_id: 0
+          noise: 0.01
+          noise_unhealthy_coeff: 100.0
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+
+        vel_vio:
+          state_id: 1
+          noise: 0.1
+          noise_unhealthy_coeff: 100.0
+          body_frame: true # the velocity of OpenVINS is in the body frame
+          message:
+            type: "nav_msgs/Odometry"
+            topic: "vins_republisher/odom"
+            limit:
+              delay: 1.0 # [s]
+              time_since_last: 0.5 # [s]
+          processors: []
+          transform:
+            enabled: false
+
+  # the lists of estimator_types replace the defaults: they must contain every estimator that can be active
+  constraint_manager:
+    estimator_types: ["gps_baro", "open_vins"]
+    constraints: ["slow", "medium", "fast"]
+    allowed_constraints:
+      gps_baro: ["slow", "medium", "fast"]
+      open_vins: ["slow", "medium", "fast"]
+    default_constraints:
+      gps_baro: "slow"
+      open_vins: "slow"
+
+  gain_manager:
+    estimator_types: ["gps_baro", "open_vins"]
+    gains: ["supersoft"]
+    allowed_gains:
+      gps_baro: ["supersoft"]
+      open_vins: ["supersoft"]
+    default_gains:
+      gps_baro: "supersoft"
+      open_vins: "supersoft"
+  control_manager:
+    safety:
+      odometry_max_missing_time: 1.0 # [s]
+      rc_emergency_handoff:
+        enabled: false
+
+  transform_manager:
+    open_vins: # TF of the open_vins state estimator (used only when it is in state_estimators)
+      odom_topic: "odom"
+      tf_from_attitude:
+        enabled: true
+        attitude_topic: "attitude"
+      namespace: "estimation_manager/open_vins"
+      utm_based: false # OpenVINS has no global reference
+      inverted: true # inverted TF tree of MRS
+      republish_in_frames: []
+      custom_child_frame_id:
+        enabled: false
+      custom_frame_id:
+        enabled: false
+  uav_manager:
+    takeoff:
+      takeoff_height: 1.2 # [m]
+      during_takeoff:
+        controller: "Se3Controller"
+      after_takeoff:
+        controller: "Se3Controller"
+
+    # both need the AGL height, and the RoboFly has no rangefinder
+    min_height_checking:
+      enabled: false
+    max_height_checking:
+      enabled: false
+
+  diagnostics_manager:
+    sensor_handlers:
+      active_sensor_handlers: [
+          "PX4",
+          "GNSS",
+          "Magnetometer",
+          "RemoteController",
+        ] # the defaults without the Rangefinder
+    preflight_check:
+      height_check:
+        enabled: false # no rangefinder
